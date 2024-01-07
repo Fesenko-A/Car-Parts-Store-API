@@ -1,0 +1,23 @@
+﻿using DAL.Repository;
+using DAL.Repository.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace DAL {
+    public class ProductDAL {
+        private readonly ApplicationDbContext _context;
+
+        public ProductDAL() {
+            _context = new ApplicationDbContext();
+        }
+
+        public async Task<List<Product>> GetAllProducts() {
+            var products = await _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category).ToListAsync();
+            return products;
+        }
+
+        public async Task<Product> GetProduct(int id) {
+            var product = await _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category).Where(p => p.Id == id).FirstOrDefaultAsync();
+            return product;
+        }
+    }
+}
