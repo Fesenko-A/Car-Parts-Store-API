@@ -24,5 +24,10 @@ namespace DAL {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateProduct(Product productUpdate) {
+            _context.Products.Update(productUpdate);
+            await _context.SaveChangesAsync();
+        }
     }
 }

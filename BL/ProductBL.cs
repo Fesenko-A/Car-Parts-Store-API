@@ -38,8 +38,35 @@ namespace BL {
                 return null;
             }
 
-            Product createdProduct = await GetProduct(product.Id);
+            Product createdProduct = await _dal.GetProduct(product.Id);
             return createdProduct;
+        }
+
+        public async Task<Product?> UpdateProduct(int id, ProductDto productUpdateBody) {
+            Product productToUpdate;
+
+            try {
+                productToUpdate = await _dal.GetProduct(id);
+            } catch (Exception) {
+                return null;
+            }
+
+            productToUpdate.BrandId = productUpdateBody.BrandId;
+            productToUpdate.Name = productUpdateBody.Name;
+            productToUpdate.Description = productUpdateBody.Description;
+            productToUpdate.SpecialTagId = productUpdateBody.SpecialTagId;
+            productToUpdate.CategoryId = productUpdateBody.CategoryId;
+            productToUpdate.Price = productUpdateBody.Price;
+            productToUpdate.ImageUrl = productUpdateBody.ImageUrl;
+
+            try {
+                await _dal.UpdateProduct(productToUpdate);
+            } catch (DbUpdateException) { 
+                return null; 
+            }
+
+            Product updatedProduct = await _dal.GetProduct(id);
+            return updatedProduct;
         }
     }
 }

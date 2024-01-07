@@ -48,5 +48,19 @@ namespace API.Controllers {
                 return BadRequest();
             }
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateProduct(int id, ProductDto productUpdateBody) {
+            if (id == 0 || !ModelState.IsValid) {
+                return BadRequest();
+            }
+
+            var product = await _BL.UpdateProduct(id, productUpdateBody);
+            if (product == null) {
+                return BadRequest();
+            }
+
+            return Ok(product);
+        }
     }
 }
