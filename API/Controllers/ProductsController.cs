@@ -1,4 +1,5 @@
 ﻿using BL;
+using BL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers {
@@ -32,5 +33,20 @@ namespace API.Controllers {
             return Ok(product);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> CreateProduct(ProductDto productDto) {
+            if (ModelState.IsValid) {
+                var product = await _BL.CreateProduct(productDto);
+
+                if (product == null) {
+                    return BadRequest();
+                }
+
+                return Ok(product);
+            }
+            else {
+                return BadRequest();
+            }
+        }
     }
 }

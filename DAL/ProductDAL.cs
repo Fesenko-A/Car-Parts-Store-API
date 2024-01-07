@@ -19,5 +19,10 @@ namespace DAL {
             var product = await _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category).Where(p => p.Id == id).FirstOrDefaultAsync();
             return product;
         }
+
+        public async Task CreateProduct(Product product) {
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+        }
     }
 }
