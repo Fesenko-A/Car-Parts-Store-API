@@ -1,21 +1,23 @@
-﻿using BL.Models;
+﻿using BL.Interfaces;
+using BL.Models;
+using DAL;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BL {
-    public class CategoryBL {
+    public class CategoryBL : IProductDetailsBL<Category, CategoryDto> {
         private readonly DAL.CategoryDAL _dal;
 
         public CategoryBL() {
             _dal = new DAL.CategoryDAL();
         }
 
-        public async Task<Category?> CreateCategory(CategoryDto categoryDto) {
-            Category? categoryFromDb = await _dal.FindCategoryByName(categoryDto.Name);
+        public async Task<Category?> Create(CategoryDto dto) {
+            Category? categoryFromDb = await _dal.FindCategoryByName(dto.Name);
 
             if (categoryFromDb == null) {
                 Category category = new Category {
-                    Name = categoryDto.Name
+                    Name = dto.Name
                 };
 
                 try {
@@ -30,7 +32,7 @@ namespace BL {
             return categoryFromDb;
         }
 
-        public async Task<List<Category>> GetAllCategories() {
+        public async Task<List<Category>> GetAll() {
             List<Category> categories = await _dal.GetAllCategories();
             return categories;
         }

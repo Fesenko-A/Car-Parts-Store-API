@@ -1,5 +1,4 @@
-﻿using BL.Models;
-using BL;
+﻿using BL;
 using Microsoft.AspNetCore.Mvc;
 using DAL.Repository.Models;
 
@@ -15,14 +14,14 @@ namespace API.Controllers {
 
         [HttpGet]
         public async Task<ActionResult> GetAllSpecialTags() {
-            var specialTags = await _bl.GetAllSpecialTags();
+            var specialTags = await _bl.GetAll();
             return Ok(specialTags);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateSpecialTag(SpecialTagDto specialTagDto) {
             if (ModelState.IsValid) {
-                var specialTag = await _bl.CreateSpecialTag(specialTagDto);
+                var specialTag = await _bl.Create(specialTagDto);
 
                 if (specialTag == null) {
                     return BadRequest();

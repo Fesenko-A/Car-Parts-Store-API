@@ -14,14 +14,14 @@ namespace API.Controllers {
 
         [HttpGet]
         public async Task<ActionResult> GetAllBrands() {
-            var brands = await _bl.GetAllBrands();
+            var brands = await _bl.GetAll();
             return Ok(brands);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateBrand(BrandDto brandDto) {
             if (ModelState.IsValid) {
-                var brand = await _bl.CreateBrand(brandDto);
+                var brand = await _bl.Create(brandDto);
 
                 if (brand == null) {
                     return BadRequest();

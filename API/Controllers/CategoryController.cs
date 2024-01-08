@@ -14,14 +14,14 @@ namespace API.Controllers {
 
         [HttpGet]
         public async Task<ActionResult> GetAllCategories() {
-            var categories = await _bl.GetAllCategories();
+            var categories = await _bl.GetAll();
             return Ok(categories);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateCategory(CategoryDto categoryDto) {
             if (ModelState.IsValid) {
-                var category = await _bl.CreateCategory(categoryDto);
+                var category = await _bl.Create(categoryDto);
 
                 if (category == null) {
                     return BadRequest();

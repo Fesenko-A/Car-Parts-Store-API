@@ -1,21 +1,21 @@
-﻿using BL.Models;
+﻿using BL.Interfaces;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BL {
-    public class SpecialTagBL {
+    public class SpecialTagBL : IProductDetailsBL<SpecialTag, SpecialTagDto> {
         private readonly DAL.SpecialTagDAL _dal;
 
         public SpecialTagBL () {
             _dal = new DAL.SpecialTagDAL();
         }
 
-        public async Task<SpecialTag?> CreateSpecialTag(SpecialTagDto specialTagDto) {
-            SpecialTag? specialTagFromDb = await _dal.FindSpecialTagByName(specialTagDto.Name);
+        public async Task<SpecialTag?> Create(SpecialTagDto dto) {
+            SpecialTag? specialTagFromDb = await _dal.FindSpecialTagByName(dto.Name);
 
             if (specialTagFromDb == null) {
                 SpecialTag specialTag = new SpecialTag {
-                    Name = specialTagDto.Name
+                    Name = dto.Name
                 };
 
                 try {
@@ -30,7 +30,7 @@ namespace BL {
             return specialTagFromDb;
         }
 
-        public async Task<List<SpecialTag>> GetAllSpecialTags() {
+        public async Task<List<SpecialTag>> GetAll() {
             List<SpecialTag> categories = await _dal.GetAllSpecialTags();
             return categories;
         }

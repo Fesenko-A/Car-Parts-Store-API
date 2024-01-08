@@ -1,21 +1,22 @@
-﻿using BL.Models;
+﻿using BL.Interfaces;
+using BL.Models;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BL {
-    public class BrandBL {
+    public class BrandBL : IProductDetailsBL<Brand, BrandDto> {
         private readonly DAL.BrandDAL _dal;
 
         public BrandBL() { 
             _dal = new DAL.BrandDAL();
         }
 
-        public async Task<Brand?> CreateBrand(BrandDto brandDto) {
-            Brand? brandFromDb = await _dal.FindBrandByName(brandDto.Name);
+        public async Task<Brand?> Create(BrandDto dto) {
+            Brand? brandFromDb = await _dal.FindBrandByName(dto.Name);
 
             if (brandFromDb == null) {
                 Brand brand = new Brand {
-                    Name = brandDto.Name
+                    Name = dto.Name
                 };
 
                 try {
@@ -30,7 +31,7 @@ namespace BL {
             return brandFromDb;
         }
 
-        public async Task<List<Brand>> GetAllBrands() {
+        public async Task<List<Brand>> GetAll() {
             List<Brand> brands = await _dal.GetAllBrands();
             return brands;
         }
