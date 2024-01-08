@@ -6,21 +6,21 @@ namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductsController : ControllerBase {
-        private readonly ProductBL _BL;
+        private readonly ProductBL _bl;
 
         public ProductsController() {
-            _BL = new ProductBL();
+            _bl = new ProductBL();
         }
 
         [HttpGet]
         public async Task<ActionResult> GetAllProducts() {
-            var products = await _BL.GetAllProducts();
+            var products = await _bl.GetAllProducts();
             return Ok(products);
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult> GetProduct(int id) {
-            var product = await _BL.GetProduct(id);
+            var product = await _bl.GetProduct(id);
 
             if (id == 0) {
                 return BadRequest();
@@ -36,7 +36,7 @@ namespace API.Controllers {
         [HttpPost]
         public async Task<ActionResult> CreateProduct(ProductDto productDto) {
             if (ModelState.IsValid) {
-                var product = await _BL.CreateProduct(productDto);
+                var product = await _bl.CreateProduct(productDto);
 
                 if (product == null) {
                     return BadRequest();
@@ -55,7 +55,7 @@ namespace API.Controllers {
                 return BadRequest();
             }
 
-            var product = await _BL.UpdateProduct(id, productUpdateBody);
+            var product = await _bl.UpdateProduct(id, productUpdateBody);
             if (product == null) {
                 return BadRequest();
             }
@@ -69,7 +69,7 @@ namespace API.Controllers {
                 return BadRequest();
             }
 
-            bool success = await _BL.DeleteProduct(id);
+            bool success = await _bl.DeleteProduct(id);
             if (!success) {
                 return BadRequest();
             }
