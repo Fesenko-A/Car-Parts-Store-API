@@ -49,7 +49,7 @@ namespace API.Controllers {
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult> UpdateProduct(int id, ProductDto productUpdateBody) {
             if (id == 0 || !ModelState.IsValid) {
                 return BadRequest();
@@ -61,6 +61,20 @@ namespace API.Controllers {
             }
 
             return Ok(product);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteProduct(int id) {
+            if (id == 0) {
+                return BadRequest();
+            }
+
+            bool success = await _BL.DeleteProduct(id);
+            if (!success) {
+                return BadRequest();
+            }
+
+            return NoContent();
         }
     }
 }

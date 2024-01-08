@@ -15,7 +15,7 @@ namespace DAL {
             return products;
         }
 
-        public async Task<Product> GetProduct(int id) {
+        public async Task<Product?> GetProduct(int id) {
             var product = await _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category).Where(p => p.Id == id).FirstOrDefaultAsync();
             return product;
         }
@@ -27,6 +27,11 @@ namespace DAL {
 
         public async Task UpdateProduct(Product productUpdate) {
             _context.Products.Update(productUpdate);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteProduct(Product productToDelete) {
+            _context.Products.Remove(productToDelete);
             await _context.SaveChangesAsync();
         }
     }

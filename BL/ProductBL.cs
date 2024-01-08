@@ -16,8 +16,8 @@ namespace BL {
             return productsFromDb;
         }
 
-        public async Task<Product> GetProduct(int id) {
-            Product productFromDb = await _dal.GetProduct(id);
+        public async Task<Product?> GetProduct(int id) {
+            Product? productFromDb = await _dal.GetProduct(id);
             return productFromDb;
         }
 
@@ -43,11 +43,9 @@ namespace BL {
         }
 
         public async Task<Product?> UpdateProduct(int id, ProductDto productUpdateBody) {
-            Product productToUpdate;
+            Product? productToUpdate = await _dal.GetProduct(id);
 
-            try {
-                productToUpdate = await _dal.GetProduct(id);
-            } catch (Exception) {
+            if (productToUpdate == null) {
                 return null;
             }
 
@@ -67,6 +65,17 @@ namespace BL {
 
             Product updatedProduct = await _dal.GetProduct(id);
             return updatedProduct;
+        }
+
+        public async Task<bool> DeleteProduct(int id) {
+            Product? productToDelete = await _dal.GetProduct(id);
+
+            if (productToDelete == null) { 
+                return false; 
+            }
+
+            await _dal.DeleteProduct(productToDelete);
+            return true;
         }
     }
 }
