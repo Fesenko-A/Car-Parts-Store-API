@@ -1,33 +1,33 @@
 ﻿using DAL.Repository.Models;
 using DAL.Repository;
 using Microsoft.EntityFrameworkCore;
+using DAL.Interfaces;
 
 namespace DAL {
-    public class CategoryDAL {
+    public class CategoryDAL : IProductDetailsDAL<Category> {
         private readonly ApplicationDbContext _context;
 
         public CategoryDAL() {
             _context = new ApplicationDbContext();
         }
 
-        public async Task<Category?> FindCategoryByName(string categoryName) {
-            Category? category = await _context.Category.Where(x => x.Name.ToLower() == categoryName.ToLower()).FirstOrDefaultAsync();
+        public async Task<Category?> FindByName(string name) {
+            Category? category = await _context.Category.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
             return category;
         }
 
-        public async Task<List<Category>> GetAllCategories() {
+        public async Task<List<Category>> GetAll() {
             var categories = await _context.Category.ToListAsync();
             return categories;
         }
 
-        public async Task<Category?> GetCategory(int id) {
-            var category = await _context.Category.Where(b => b.Id == id).FirstOrDefaultAsync();
+        public async Task<Category?> GetById(int id) {
+            var category = await _context.Category.Where(c => c.Id == id).FirstOrDefaultAsync();
             return category;
         }
 
-
-        public async Task CreateCategory(Category categoryToAdd) {
-            _context.Category.Add(categoryToAdd);
+        public async Task Create(Category toAdd) {
+            _context.Category.Add(toAdd);
             await _context.SaveChangesAsync();
         }
     }

@@ -13,7 +13,7 @@ namespace BL {
         }
 
         public async Task<Category?> Create(CategoryDto dto) {
-            Category? categoryFromDb = await _dal.FindCategoryByName(dto.Name);
+            Category? categoryFromDb = await _dal.FindByName(dto.Name);
 
             if (categoryFromDb == null) {
                 Category category = new Category {
@@ -21,8 +21,8 @@ namespace BL {
                 };
 
                 try {
-                    await _dal.CreateCategory(category);
-                    return await _dal.GetCategory(category.Id);
+                    await _dal.Create(category);
+                    return await _dal.GetById(category.Id);
                 }
                 catch (DbUpdateException) {
                     return null;
@@ -33,7 +33,7 @@ namespace BL {
         }
 
         public async Task<List<Category>> GetAll() {
-            List<Category> categories = await _dal.GetAllCategories();
+            List<Category> categories = await _dal.GetAll();
             return categories;
         }
     }

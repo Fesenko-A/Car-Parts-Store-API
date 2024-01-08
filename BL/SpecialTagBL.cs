@@ -11,7 +11,7 @@ namespace BL {
         }
 
         public async Task<SpecialTag?> Create(SpecialTagDto dto) {
-            SpecialTag? specialTagFromDb = await _dal.FindSpecialTagByName(dto.Name);
+            SpecialTag? specialTagFromDb = await _dal.FindByName(dto.Name);
 
             if (specialTagFromDb == null) {
                 SpecialTag specialTag = new SpecialTag {
@@ -19,8 +19,8 @@ namespace BL {
                 };
 
                 try {
-                    await _dal.CreateSpecialTag(specialTag);
-                    return await _dal.GetSpecialTag(specialTag.Id);
+                    await _dal.Create(specialTag);
+                    return await _dal.GetById(specialTag.Id);
                 }
                 catch (DbUpdateException) {
                     return null;
@@ -31,7 +31,7 @@ namespace BL {
         }
 
         public async Task<List<SpecialTag>> GetAll() {
-            List<SpecialTag> categories = await _dal.GetAllSpecialTags();
+            List<SpecialTag> categories = await _dal.GetAll();
             return categories;
         }
     }

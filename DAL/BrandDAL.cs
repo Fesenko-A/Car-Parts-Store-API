@@ -1,33 +1,33 @@
-﻿using DAL.Repository;
+﻿using DAL.Interfaces;
+using DAL.Repository;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL {
-    public class BrandDAL {
+    public class BrandDAL : IProductDetailsDAL<Brand> {
         private readonly ApplicationDbContext _context;
 
         public BrandDAL() {
             _context = new ApplicationDbContext();
         }
 
-        public async Task<Brand?> FindBrandByName(string brandName) {
-            Brand? brand = await _context.Brand.Where(x => x.Name.ToLower() == brandName.ToLower()).FirstOrDefaultAsync();
+        public async Task<Brand?> FindByName(string name) {
+            Brand? brand = await _context.Brand.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
             return brand;
         }
 
-        public async Task<List<Brand>> GetAllBrands() {
+        public async Task<List<Brand>> GetAll() {
             var brands = await _context.Brand.ToListAsync();
             return brands;
         }
 
-        public async Task<Brand?> GetBrand(int id) {
+        public async Task<Brand?> GetById(int id) {
             var brand = await _context.Brand.Where(b => b.Id == id).FirstOrDefaultAsync();
             return brand;
         }
 
-
-        public async Task CreateBrand(Brand brandToAdd) {
-            _context.Brand.Add(brandToAdd);
+        public async Task Create(Brand toAdd) {
+            _context.Brand.Add(toAdd);
             await _context.SaveChangesAsync();
         }
     }

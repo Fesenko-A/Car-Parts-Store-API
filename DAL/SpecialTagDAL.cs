@@ -1,33 +1,33 @@
 ﻿using DAL.Repository.Models;
 using DAL.Repository;
 using Microsoft.EntityFrameworkCore;
+using DAL.Interfaces;
 
 namespace DAL {
-    public class SpecialTagDAL {
+    public class SpecialTagDAL : IProductDetailsDAL<SpecialTag> {
         private readonly ApplicationDbContext _context;
 
         public SpecialTagDAL() {
             _context = new ApplicationDbContext();
         }
 
-        public async Task<SpecialTag?> FindSpecialTagByName(string specialTagName) {
-            SpecialTag? specialTag = await _context.SpecialTag.Where(x => x.Name.ToLower() == specialTagName.ToLower()).FirstOrDefaultAsync();
+        public async Task<SpecialTag?> FindByName(string name) {
+            SpecialTag? specialTag = await _context.SpecialTag.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
             return specialTag;
         }
 
-        public async Task<List<SpecialTag>> GetAllSpecialTags() {
+        public async Task<List<SpecialTag>> GetAll() {
             var specialTags = await _context.SpecialTag.ToListAsync();
             return specialTags;
         }
 
-        public async Task<SpecialTag?> GetSpecialTag(int id) {
+        public async Task<SpecialTag?> GetById(int id) {
             var specialTag = await _context.SpecialTag.Where(t => t.Id == id).FirstOrDefaultAsync();
             return specialTag;
         }
 
-
-        public async Task CreateSpecialTag(SpecialTag specialTagToAdd) {
-            _context.SpecialTag.Add(specialTagToAdd);
+        public async Task Create(SpecialTag toAdd) {
+            _context.SpecialTag.Add(toAdd);
             await _context.SaveChangesAsync();
         }
     }

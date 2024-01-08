@@ -12,7 +12,7 @@ namespace BL {
         }
 
         public async Task<Brand?> Create(BrandDto dto) {
-            Brand? brandFromDb = await _dal.FindBrandByName(dto.Name);
+            Brand? brandFromDb = await _dal.FindByName(dto.Name);
 
             if (brandFromDb == null) {
                 Brand brand = new Brand {
@@ -20,8 +20,8 @@ namespace BL {
                 };
 
                 try {
-                    await _dal.CreateBrand(brand);
-                    return await _dal.GetBrand(brand.Id);
+                    await _dal.Create(brand);
+                    return await _dal.GetById(brand.Id);
                 }
                 catch (DbUpdateException) {
                     return null;
@@ -32,7 +32,7 @@ namespace BL {
         }
 
         public async Task<List<Brand>> GetAll() {
-            List<Brand> brands = await _dal.GetAllBrands();
+            List<Brand> brands = await _dal.GetAll();
             return brands;
         }
     }
