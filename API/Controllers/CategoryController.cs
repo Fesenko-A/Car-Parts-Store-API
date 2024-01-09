@@ -1,11 +1,12 @@
 ﻿using BL.Models;
 using BL;
 using Microsoft.AspNetCore.Mvc;
+using API.Interfaces;
 
 namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class CategoryController : ControllerBase {
+    public class CategoryController : ControllerBase, IProductDetails<CategoryDto> {
         private readonly CategoryBL _bl;
 
         public CategoryController() {
@@ -13,13 +14,13 @@ namespace API.Controllers {
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllCategories() {
+        public async Task<ActionResult> GetAll() {
             var categories = await _bl.GetAll();
             return Ok(categories);
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCategory(CategoryDto categoryDto) {
+        public async Task<ActionResult> Create(CategoryDto categoryDto) {
             if (ModelState.IsValid) {
                 var category = await _bl.Create(categoryDto);
 
