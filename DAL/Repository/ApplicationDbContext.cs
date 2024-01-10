@@ -1,4 +1,5 @@
-﻿using DAL.Repository.Models;
+﻿using Auth;
+using DAL.Repository.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ namespace DAL.Repository {
         public DbSet<Category> Category { get; set; }
         public DbSet<Brand> Brand { get; set; }
         public DbSet<SpecialTag> SpecialTag { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseSqlServer("Server=DESKTOP-8P1IA8R\\SQLEXPRESS;Database=CarPartsAPI;TrustServerCertificate=True;Trusted_Connection=True;");

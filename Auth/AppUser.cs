@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace DAL.Repository.Models {
+namespace Auth {
     public class AppUser : IdentityUser {
         public string Name { get; set; }
     }

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using DAL.Repository.Models;
 using API.Interfaces;
+using Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers {
     [Route("api/[controller]/[action]")]
@@ -20,6 +22,7 @@ namespace API.Controllers {
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult> Create(SpecialTagDto specialTagDto) {
             if (ModelState.IsValid) {
                 var specialTag = await _bl.Create(specialTagDto);

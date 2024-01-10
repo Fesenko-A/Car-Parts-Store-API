@@ -2,6 +2,8 @@
 using BL;
 using Microsoft.AspNetCore.Mvc;
 using API.Interfaces;
+using Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers {
     [Route("api/[controller]/[action]")]
@@ -20,6 +22,7 @@ namespace API.Controllers {
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult> Create(CategoryDto categoryDto) {
             if (ModelState.IsValid) {
                 var category = await _bl.Create(categoryDto);

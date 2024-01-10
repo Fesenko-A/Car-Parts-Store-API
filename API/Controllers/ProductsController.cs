@@ -1,5 +1,7 @@
-﻿using BL;
+﻿using Auth;
+using BL;
 using BL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers {
@@ -34,6 +36,7 @@ namespace API.Controllers {
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult> CreateProduct(ProductDto productDto) {
             if (ModelState.IsValid) {
                 var product = await _bl.CreateProduct(productDto);
@@ -50,6 +53,7 @@ namespace API.Controllers {
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult> UpdateProduct(int id, ProductDto productUpdateBody) {
             if (id == 0 || !ModelState.IsValid) {
                 return BadRequest();
@@ -64,6 +68,7 @@ namespace API.Controllers {
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult> DeleteProduct(int id) {
             if (id == 0) {
                 return BadRequest();
