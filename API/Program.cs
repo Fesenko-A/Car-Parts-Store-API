@@ -30,7 +30,7 @@ builder.Services.AddAuthentication(u => {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
         ValidateIssuer = false,
-        ValidateAudience = true,
+        ValidateAudience = false,
     };
 });
 
@@ -43,7 +43,8 @@ builder.Services.AddSwaggerGen(o => {
         Description = "JWT Authorization Header",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Scheme = JwtBearerDefaults.AuthenticationScheme
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Type = SecuritySchemeType.Http
     });
     o.AddSecurityRequirement(new OpenApiSecurityRequirement() {
         {
