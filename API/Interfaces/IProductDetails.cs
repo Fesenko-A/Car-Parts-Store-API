@@ -2,8 +2,8 @@
 
 namespace API.Interfaces {
     internal interface IProductDetails<T> {
-        Task<ActionResult> GetAll();
+        Task<ActionResult<ApiResponse>> GetAll();
 
-        Task<ActionResult> Create(T dto);
+        Task<ActionResult<ApiResponse>> Create(T dto);
     }
 }

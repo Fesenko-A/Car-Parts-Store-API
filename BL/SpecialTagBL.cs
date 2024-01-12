@@ -1,4 +1,5 @@
 ﻿using BL.Interfaces;
+using BL.Models;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 

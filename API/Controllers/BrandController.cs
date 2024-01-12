@@ -4,37 +4,46 @@ using BL;
 using BL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class BrandController : ControllerBase, IProductDetails<BrandDto> {
         private readonly BrandBL _bl;
+        private readonly ApiResponse _response;
 
         public BrandController() {
             _bl = new BrandBL();
+            _response = new ApiResponse();
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAll() {
+        public async Task<ActionResult<ApiResponse>> GetAll() {
             var brands = await _bl.GetAll();
-            return Ok(brands);
+            _response.Result = brands;
+            return Ok(_response);
         }
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult> Create(BrandDto brandDto) {
+        public async Task<ActionResult<ApiResponse>> Create(BrandDto brandDto) {
             if (ModelState.IsValid) {
                 var brand = await _bl.Create(brandDto);
 
                 if (brand == null) {
-                    return BadRequest();
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    return BadRequest(_response);
                 }
 
-                return Ok(brand);
+                _response.Result = brand;
+                return Ok(_response);
             }
             else {
-                return BadRequest();
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
             }
         }
     }

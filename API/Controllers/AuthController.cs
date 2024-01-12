@@ -18,7 +18,7 @@ namespace API.Controllers {
         }
 
         [HttpPost]
-        public async Task<ActionResult> Register(RegisterRequestDto registerRequest) {
+        public async Task<ActionResult<ApiResponse>> Register(RegisterRequestDto registerRequest) {
             bool isSuccess = await _bl.Register(registerRequest);
             if (!isSuccess) {
                 _response.IsSuccess = false;
@@ -30,7 +30,7 @@ namespace API.Controllers {
         }
 
         [HttpPost]
-        public async Task<ActionResult> Login(LoginRequestDto loginRequest) {
+        public async Task<ActionResult<ApiResponse>> Login(LoginRequestDto loginRequest) {
             LoginResponseDto? loginResponse = await _bl.Login(loginRequest);
             if (loginResponse == null) {
                 _response.IsSuccess = false;
