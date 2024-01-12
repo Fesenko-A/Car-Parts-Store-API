@@ -15,13 +15,13 @@ namespace API.Controllers {
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllProducts() {
+        public async Task<ActionResult> GetAll() {
             var products = await _bl.GetAllProducts();
             return Ok(products);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult> GetProduct(int id) {
+        public async Task<ActionResult> Get(int id) {
             var product = await _bl.GetProduct(id);
 
             if (id == 0) {
@@ -37,7 +37,7 @@ namespace API.Controllers {
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult> CreateProduct(ProductDto productDto) {
+        public async Task<ActionResult> Create(ProductDto productDto) {
             if (ModelState.IsValid) {
                 var product = await _bl.CreateProduct(productDto);
 
@@ -54,7 +54,7 @@ namespace API.Controllers {
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult> UpdateProduct(int id, ProductDto productUpdateBody) {
+        public async Task<ActionResult> Update(int id, ProductDto productUpdateBody) {
             if (id == 0 || !ModelState.IsValid) {
                 return BadRequest();
             }
@@ -69,7 +69,7 @@ namespace API.Controllers {
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult> DeleteProduct(int id) {
+        public async Task<ActionResult> Delete(int id) {
             if (id == 0) {
                 return BadRequest();
             }
