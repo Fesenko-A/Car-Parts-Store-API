@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DAL.Repository.Models {
     public class Order {
         [Key]
-        public int Id { get; set; }
+        public int OrderId { get; set; }
         [Required]
         public string PickupName { get; set; }
         [Required]
@@ -16,8 +16,8 @@ namespace DAL.Repository.Models {
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public AppUser User { get; set; }
-
         public double OrderTotal { get; set; }
+        public DateTime OrderDate { get; set; }
         public string PaymentId { get; set; }
         public string Status { get; set; }
         public int TotalItems { get; set; }

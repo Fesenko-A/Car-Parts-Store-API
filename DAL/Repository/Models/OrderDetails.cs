@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DAL.Repository.Models {
     public class OrderDetails {
         [Key]
-        public int Id { get; set; }
+        public int OrderDetailsId { get; set; }
         [Required]
         public int OrderId { get; set; }
         [Required]

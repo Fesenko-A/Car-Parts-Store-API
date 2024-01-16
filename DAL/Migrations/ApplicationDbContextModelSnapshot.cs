@@ -106,6 +106,18 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Brand");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Bosch"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Castrol"
+                        });
                 });
 
             modelBuilder.Entity("DAL.Repository.Models.CartItem", b =>
@@ -149,15 +161,30 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Oil"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Batteries"
+                        });
                 });
 
             modelBuilder.Entity("DAL.Repository.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<double>("OrderTotal")
                         .HasColumnType("float");
@@ -189,7 +216,7 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderId");
 
                     b.HasIndex("UserId");
 
@@ -198,11 +225,11 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Repository.Models.OrderDetails", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("OrderDetailsId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderDetailsId"));
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -220,7 +247,7 @@ namespace DAL.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderDetailsId");
 
                     b.HasIndex("OrderId");
 
@@ -270,6 +297,30 @@ namespace DAL.Migrations
                     b.HasIndex("SpecialTagId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BrandId = 2,
+                            CategoryId = 1,
+                            Description = "Non-stop protection from every start.",
+                            ImageUrl = "https://images.lteplatform.com/images/products/600x600/521771951.jpg",
+                            Name = "Castrol Magnatec Engine Oil - 10W-40 - 4ltr",
+                            Price = 34.740000000000002,
+                            SpecialTagId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BrandId = 1,
+                            CategoryId = 2,
+                            Description = "Bosch S4 car batteries are a high quality, premium replacement for you original car battery.",
+                            ImageUrl = "https://images.lteplatform.com/images/products/600x600/444770757.jpg",
+                            Name = "Bosch Car Battery 075",
+                            Price = 85.890000000000001,
+                            SpecialTagId = 1
+                        });
                 });
 
             modelBuilder.Entity("DAL.Repository.Models.ShoppingCart", b =>
@@ -304,6 +355,18 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SpecialTag");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = ""
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Best Seller"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

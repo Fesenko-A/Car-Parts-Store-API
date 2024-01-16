@@ -57,7 +57,7 @@ namespace API.Controllers {
                 }
 
                 _response.Result = product;
-                return Ok(product);
+                return Ok(_response);
             }
             else {
                 _response.IsSuccess = false;
