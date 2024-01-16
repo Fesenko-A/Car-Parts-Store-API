@@ -20,7 +20,7 @@ namespace DAL.Repository {
         public DbSet<OrderDetails> OrderDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-8P1IA8R\\SQLEXPRESS;Database=CarPartsAPI;TrustServerCertificate=True;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(Connections.LOCAL);
         }
 
         //protected override void OnModelCreating(ModelBuilder builder) {
