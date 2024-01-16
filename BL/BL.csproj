@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Stripe.net" Version="43.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Auth\Auth.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
