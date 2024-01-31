@@ -10,7 +10,7 @@ namespace BL {
             _dal = new DAL.OrderDAL();
         }
 
-        public List<Order> GetAll(string? userId, string searchString, string status) {
+        public List<Order> GetAll(string? userId, string? searchString, string? status) {
             var ordersFromDb = _dal.GetAll(userId, searchString, status);
             return ordersFromDb;
         }

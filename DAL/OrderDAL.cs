@@ -10,7 +10,7 @@ namespace DAL {
             _context = new ApplicationDbContext();
         }
 
-        public List<Order> GetAll(string? userId, string searchString, string status) {
+        public List<Order> GetAll(string? userId, string? searchString, string? status) {
             IEnumerable<Order> orders = _context.Orders.
                 Include(o => o.OrderDetails).
                     ThenInclude(i => i.Product).

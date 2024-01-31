@@ -16,7 +16,7 @@ namespace API.Controllers {
         }
 
         [HttpGet]
-        public ActionResult<ApiResponse> GetAll(string? userId, string searchString, string status) {
+        public ActionResult<ApiResponse> GetAll(string? userId, string? searchString, string? status) {
             var ordersFromDb = _bl.GetAll(userId, searchString, status);
 
             if (ordersFromDb == null) {
