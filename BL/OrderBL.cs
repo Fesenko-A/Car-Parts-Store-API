@@ -34,7 +34,7 @@ namespace BL {
             };
 
             try {
-                _dal.Create(order);
+                await _dal.Create(order);
 
                 foreach (var orderDetailsDto in orderToCreate.OrderDetails) {
                     OrderDetails orderDetails = new OrderDetails {

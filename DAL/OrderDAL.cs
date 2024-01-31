@@ -59,8 +59,9 @@ namespace DAL {
             return order;
         }
 
-        public void Create(Order orderToCreate) {
+        public async Task Create(Order orderToCreate) {
             _context.Orders.Add(orderToCreate);
+            await Save();
         }
 
         public void CreateDetails(OrderDetails orderDetails) {
@@ -69,7 +70,7 @@ namespace DAL {
 
         public async Task Update(Order orderToUpdate) {
             _context.Orders.Update(orderToUpdate);
-            await _context.SaveChangesAsync();
+            await Save();
         }
 
         public async Task Save() {
