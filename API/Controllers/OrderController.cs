@@ -64,8 +64,8 @@ namespace API.Controllers {
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult<ApiResponse>> Update(int id, OrderUpdateDto orderToUpdate) {
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<ApiResponse>> Update(int id, [FromBody] OrderUpdateDto orderToUpdate) {
             bool isSuccess = await _bl.Update(id, orderToUpdate);
 
             if (!isSuccess) {
