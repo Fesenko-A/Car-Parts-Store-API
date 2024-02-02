@@ -71,7 +71,7 @@ namespace BL {
                 else {
                     int newQuantity = itemInCart.Quantity + updateQuantityBy;
                     if (updateQuantityBy == 0 || newQuantity <= 0) {
-                        await _cartItemDal.Create(itemInCart);
+                        await _cartItemDal.Remove(itemInCart);
 
                         if (shoppingCart.CartItems.Count() == 1) {
                             await _shoppingCartDal.Remove(shoppingCart);
