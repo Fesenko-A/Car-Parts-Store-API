@@ -46,7 +46,7 @@ namespace API.Controllers {
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult<ApiResponse>> Create(ProductDto productDto) {
+        public async Task<ActionResult<ApiResponse>> Create([FromForm] ProductDto productDto) {
             if (ModelState.IsValid) {
                 var product = await _bl.CreateProduct(productDto);
 
@@ -68,7 +68,7 @@ namespace API.Controllers {
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult<ApiResponse>> Update(int id, ProductDto productUpdateBody) {
+        public async Task<ActionResult<ApiResponse>> Update(int id, [FromForm] ProductDto productUpdateBody) {
             if (id == 0 || !ModelState.IsValid) {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
