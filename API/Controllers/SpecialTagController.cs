@@ -27,7 +27,7 @@ namespace API.Controllers {
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult<ApiResponse>> Create(SpecialTagDto specialTagDto) {
+        public async Task<ActionResult<ApiResponse>> Create([FromForm] SpecialTagDto specialTagDto) {
             if (ModelState.IsValid) {
                 var specialTag = await _bl.Create(specialTagDto);
 

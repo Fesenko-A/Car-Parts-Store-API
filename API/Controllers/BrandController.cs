@@ -27,7 +27,7 @@ namespace API.Controllers {
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult<ApiResponse>> Create(BrandDto brandDto) {
+        public async Task<ActionResult<ApiResponse>> Create([FromForm] BrandDto brandDto) {
             if (ModelState.IsValid) {
                 var brand = await _bl.Create(brandDto);
 

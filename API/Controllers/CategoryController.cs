@@ -27,7 +27,7 @@ namespace API.Controllers {
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult<ApiResponse>> Create(CategoryDto categoryDto) {
+        public async Task<ActionResult<ApiResponse>> Create([FromForm] CategoryDto categoryDto) {
             if (ModelState.IsValid) {
                 var category = await _bl.Create(categoryDto);
 
