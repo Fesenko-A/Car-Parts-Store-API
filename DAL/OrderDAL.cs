@@ -43,7 +43,8 @@ namespace DAL {
         }
 
         public async Task<Order> Get(int id) {
-            var orders = await _context.Orders.Include(o => o.OrderDetails).
+            var orders = await _context.Orders.
+                Include(o => o.OrderDetails).
                     ThenInclude(i => i.Product).
                     ThenInclude(p => p.Brand).
                 Include(o => o.OrderDetails).
@@ -52,6 +53,7 @@ namespace DAL {
                 Include(o => o.OrderDetails).
                     ThenInclude(i => i.Product).
                     ThenInclude(p => p.SpecialTag).
+                Include(m => m.PaymentMethod).
                 Where(x => x.OrderId == id).
                 ToListAsync();
 

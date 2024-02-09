@@ -18,9 +18,12 @@ namespace DAL.Repository.Models {
         public AppUser User { get; set; }
         public double OrderTotal { get; set; }
         public DateTime OrderDate { get; set; }
-        public string PaymentId { get; set; }
         public string Status { get; set; }
         public int TotalItems { get; set; }
+        public int? PaymentMethodId { get; set; }
+        [ForeignKey(nameof(PaymentMethodId))]
+        public PaymentMethod PaymentMethod { get; set; }
+        public DateTime LastUpdate { get; set; } = DateTime.UtcNow;
 
         public IEnumerable<OrderDetails> OrderDetails { get; set; }
     }
