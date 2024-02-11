@@ -10,7 +10,7 @@ namespace API.Controllers {
     [ApiController]
     public class ProductsController : ControllerBase {
         private readonly ProductBL _bl;
-        private ApiResponse _response;
+        private readonly ApiResponse _response;
 
         public ProductsController() {
             _bl = new ProductBL();

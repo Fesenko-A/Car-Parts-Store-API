@@ -28,7 +28,7 @@ namespace BL {
                 PickupName = orderToCreate.PickupName,
                 PickupPhoneNumber = orderToCreate.PickupPhoneNumber,
                 OrderTotal = orderToCreate.OrderTotal,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.UtcNow,
                 PaymentMethodId = orderToCreate.PaymentMethodId,
                 TotalItems = orderToCreate.TotalItems,
                 Status = string.IsNullOrEmpty(orderToCreate.Status) ? OrderStatus.PENDING : orderToCreate.Status
@@ -55,7 +55,7 @@ namespace BL {
                 return null;
             }
 
-    Order orderFromDb = await _dal.Get(order.OrderId);
+            Order orderFromDb = await _dal.Get(order.OrderId);
             return orderFromDb;
         }
 

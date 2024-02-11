@@ -19,6 +19,7 @@ namespace DAL.Repository {
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<OnlinePayment> OnlinePayments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseSqlServer(Connections.LOCAL);
