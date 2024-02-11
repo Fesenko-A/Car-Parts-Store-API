@@ -6,6 +6,5 @@
         public string? PickupEmail { get; set; }
 
         public string? Status { get; set; }
-        public DateTime? LastUpdate { get; set; } = DateTime.UtcNow;
     }
 }

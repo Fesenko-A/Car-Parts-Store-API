@@ -68,6 +68,8 @@ namespace BL {
                 return false;
             }
 
+            orderFromDb.LastUpdate = DateTime.UtcNow;
+
             if (!string.IsNullOrEmpty(orderToUpdate.PickupName)) {
                 orderFromDb.PickupName = orderToUpdate.PickupName;
             }
