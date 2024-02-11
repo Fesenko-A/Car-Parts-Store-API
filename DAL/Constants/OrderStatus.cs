@@ -1,5 +1,5 @@
-﻿namespace DAL.Repository.Models {
-    public static class Status {
+﻿namespace DAL.Constants {
+    public static class OrderStatus {
         public const string PENDING = "Pending";
         public const string CONFIRMED = "Confirmed";
         public const string PROCESSING = "Processing";

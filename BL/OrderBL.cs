@@ -1,4 +1,5 @@
 ﻿using BL.Models;
+using DAL.Constants;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +31,7 @@ namespace BL {
                 OrderDate = DateTime.Now,
                 PaymentMethodId = orderToCreate.PaymentMethodId,
                 TotalItems = orderToCreate.TotalItems,
-                Status = string.IsNullOrEmpty(orderToCreate.Status) ? Status.PENDING : orderToCreate.Status
+                Status = string.IsNullOrEmpty(orderToCreate.Status) ? OrderStatus.PENDING : orderToCreate.Status
             };
 
             try {
