@@ -1,5 +1,7 @@
-﻿using BL;
+﻿using Auth;
+using BL;
 using BL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -30,6 +32,7 @@ namespace API.Controllers {
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult<ApiResponse>> Create(PaymentMethodDto methodToCreate) {
             if (ModelState.IsValid) {
                 var paymentMethodCreated = await _bl.Create(methodToCreate);
