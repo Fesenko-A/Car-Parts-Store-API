@@ -21,6 +21,7 @@ namespace DAL {
                 Include(o => o.OrderDetails).
                     ThenInclude(i => i.Product).
                     ThenInclude(p => p.SpecialTag).
+                Include(m => m.PaymentMethod).
                 OrderByDescending(o => o.OrderId);
 
             if (!string.IsNullOrEmpty(userId)) {

@@ -4,7 +4,7 @@
         public string? PickupName { get; set; }
         public string? PickupPhoneNumber { get; set; }
         public string? PickupEmail { get; set; }
-
         public string? Status { get; set; }
+        public int? PaymentMethodId { get; set; }
     }
 }

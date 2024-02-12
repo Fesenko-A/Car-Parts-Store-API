@@ -87,6 +87,10 @@ namespace BL {
                 orderFromDb.PickupEmail = orderToUpdate.PickupEmail;
             }
 
+            if (orderToUpdate.PaymentMethodId != null && orderToUpdate.PaymentMethodId != 0) {
+                orderFromDb.PaymentMethodId = orderToUpdate.PaymentMethodId;
+            }
+
             await _dal.Update(orderFromDb); 
             return true;
         }
