@@ -86,14 +86,18 @@ namespace BL {
             var response = service.Create(options);
 
             onlinePayment.PaymentStatus = PaymentStatus.RETURNED;
-            await _onlinePaymentDAL.Update(onlinePayment);
+
+            bool updated = await Update(onlinePayment.Id, onlinePayment);
+            if (updated == false) {
+                return null;
+            }
 
             OnlinePayment? refundedPayment = await _onlinePaymentDAL.Get(onlinePayment.Id);
             return refundedPayment;
         }
 
-        public async Task<bool> Update(int id, OnlinePaymentDto paymentDto) {
-            if (id != paymentDto.Id) { 
+        public async Task<bool> Update(int id, OnlinePayment paymentToUpdate) {
+            if (id != paymentToUpdate.Id) { 
                 return false; 
             }
 
@@ -104,7 +108,7 @@ namespace BL {
             }
 
             paymentFromDb.LastUpdate = DateTime.UtcNow;
-            paymentFromDb.PaymentStatus = paymentDto.PaymentStatus;
+            paymentFromDb.PaymentStatus = paymentToUpdate.PaymentStatus;
 
             await _onlinePaymentDAL.Update(paymentFromDb);
             return true;
