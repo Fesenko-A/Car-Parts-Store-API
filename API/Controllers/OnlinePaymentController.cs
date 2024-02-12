@@ -60,16 +60,17 @@ namespace API.Controllers {
             return Ok(payment);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<ApiResponse>> Update(int id, [FromBody] OnlinePaymentDto paymentDto) {
-            bool isSuccess = await _bl.Update(id, paymentDto);
+        [HttpPut("{orderId:int}")]
+        public async Task<ActionResult<ApiResponse>> Cancel(int orderId) {
+            var cancelledPayment = await _bl.Cancel(orderId);
 
-            if (!isSuccess) {
+            if (cancelledPayment == null) {
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 return BadRequest(_response);
             }
 
+            _response.Result = cancelledPayment;
             return Ok(_response);
         }
     }

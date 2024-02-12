@@ -67,6 +67,31 @@ namespace BL {
             return onlinePayment;
         }
 
+        public async Task<OnlinePayment?> Cancel(int orderId) {
+            Order? order = await _orderDAL.Get(orderId);
+
+            if (order == null || order.TotalItems == 0) {
+                return null;
+            }
+
+            OnlinePayment? onlinePayment = await _onlinePaymentDAL.GetByOrderId(orderId);
+            if (onlinePayment == null) {
+                return null;
+            }
+
+            StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
+            RefundCreateOptions options = new RefundCreateOptions { PaymentIntent = onlinePayment.PaymentId};
+            RefundService service = new RefundService();
+
+            var response = service.Create(options);
+
+            onlinePayment.PaymentStatus = PaymentStatus.RETURNED;
+            await _onlinePaymentDAL.Update(onlinePayment);
+
+            OnlinePayment? refundedPayment = await _onlinePaymentDAL.Get(onlinePayment.Id);
+            return refundedPayment;
+        }
+
         public async Task<bool> Update(int id, OnlinePaymentDto paymentDto) {
             if (id != paymentDto.Id) { 
                 return false; 
