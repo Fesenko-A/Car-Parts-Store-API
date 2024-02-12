@@ -15,6 +15,11 @@ namespace DAL {
             return paymentFromDb;
         }
 
+        public async Task<List<OnlinePayment>> GetAll() {
+            var payments = await _context.OnlinePayments.Include(o => o.Order).ToListAsync();
+            return payments;
+        }
+
         public async Task<OnlinePayment?> GetByOrderId(int id) {
             var paymentFromDb = await _context.OnlinePayments.Where(i => i.OrderId == id).FirstOrDefaultAsync();
             return paymentFromDb;

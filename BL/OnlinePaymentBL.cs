@@ -14,6 +14,16 @@ namespace BL {
             _onlinePaymentDAL = new DAL.OnlinePaymentDAL();
         }
 
+        public async Task<List<OnlinePayment>> GetAll() {
+            var payments = await _onlinePaymentDAL.GetAll();
+            return payments;
+        }
+
+        public async Task<OnlinePayment?> GetByOrderId(int orderId) {
+            OnlinePayment? payment = await _onlinePaymentDAL.GetByOrderId(orderId);
+            return payment;
+        }
+
         public async Task<OnlinePayment?> Create(int orderId) {
             Order? order = await _orderDAL.Get(orderId);
 
@@ -50,7 +60,11 @@ namespace BL {
             await _onlinePaymentDAL.Create(onlinePayment);
 
             OnlinePayment? paymentFromDb = await _onlinePaymentDAL.Get(onlinePayment.Id);
-            return paymentFromDb;
+            if (paymentFromDb == null) {
+                return null;
+            }
+
+            return onlinePayment;
         }
 
         public async Task<bool> Update(int id, OnlinePaymentDto paymentDto) {
