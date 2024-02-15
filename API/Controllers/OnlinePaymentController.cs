@@ -1,7 +1,4 @@
-﻿using Auth;
-using BL;
-using BL.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using BL;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -18,9 +15,8 @@ namespace API.Controllers {
         }
 
         [HttpGet]
-        [Authorize(Roles = Roles.ADMIN)]
-        public async Task<ActionResult<ApiResponse>> GetAll() {
-            var payments = await _bl.GetAll();
+        public ActionResult<ApiResponse> GetAll(string? userId, string? status) {
+            var payments = _bl.GetAll(userId, status);
             _response.Result = payments;
 
             return Ok(_response);

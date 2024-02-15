@@ -15,9 +15,18 @@ namespace DAL {
             return paymentFromDb;
         }
 
-        public async Task<List<OnlinePayment>> GetAll() {
-            var payments = await _context.OnlinePayments.Include(o => o.Order).ToListAsync();
-            return payments;
+        public List<OnlinePayment> GetAll(string? userId, string? status) {
+            IQueryable<OnlinePayment> payments = _context.OnlinePayments.Include(o => o.Order);
+
+            if (!string.IsNullOrEmpty(userId)) {
+                payments = payments.Where(u => u.UserId == userId);
+            }
+
+            if (!string.IsNullOrEmpty(status)) {
+                payments = payments.Where(s => s.PaymentStatus == status);
+            }
+
+            return payments.ToList();
         }
 
         public async Task<OnlinePayment?> GetByOrderId(int id) {

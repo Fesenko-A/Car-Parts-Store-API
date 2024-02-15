@@ -31,7 +31,8 @@ namespace BL {
                 OrderDate = DateTime.UtcNow,
                 PaymentMethodId = orderToCreate.PaymentMethodId,
                 TotalItems = orderToCreate.TotalItems,
-                Status = string.IsNullOrEmpty(orderToCreate.Status) ? OrderStatus.PENDING : orderToCreate.Status
+                Status = string.IsNullOrEmpty(orderToCreate.Status) ? OrderStatus.PENDING : orderToCreate.Status,
+                Paid = false
             };
 
             try {
@@ -70,6 +71,7 @@ namespace BL {
             }
 
             orderFromDb.LastUpdate = DateTime.UtcNow;
+            orderFromDb.Paid = orderToUpdate.Paid;
 
             if (!string.IsNullOrEmpty(orderToUpdate.PickupName)) {
                 orderFromDb.PickupName = orderToUpdate.PickupName;

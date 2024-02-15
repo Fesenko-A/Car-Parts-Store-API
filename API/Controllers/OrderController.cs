@@ -2,6 +2,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using BL.Models;
+using Microsoft.AspNetCore.Authorization;
+using Auth;
 
 namespace API.Controllers {
     [Route("api/[controller]/[action]")]
@@ -64,6 +66,7 @@ namespace API.Controllers {
             }
         }
 
+        [Authorize(Roles = Roles.ADMIN)]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<ApiResponse>> Update(int id, [FromBody] OrderUpdateDto orderToUpdate) {
             bool isSuccess = await _bl.Update(id, orderToUpdate);

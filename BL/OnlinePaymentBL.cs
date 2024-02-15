@@ -14,8 +14,8 @@ namespace BL {
             _onlinePaymentDAL = new DAL.OnlinePaymentDAL();
         }
 
-        public async Task<List<OnlinePayment>> GetAll() {
-            var payments = await _onlinePaymentDAL.GetAll();
+        public List<OnlinePayment> GetAll(string? userId, string? status) {
+            var payments = _onlinePaymentDAL.GetAll(userId, status);
             return payments;
         }
 
@@ -64,6 +64,9 @@ namespace BL {
                 return null;
             }
 
+            order.Paid = true;
+            await _orderDAL.Update(order);
+
             return onlinePayment;
         }
 
@@ -71,6 +74,10 @@ namespace BL {
             Order? order = await _orderDAL.Get(orderId);
 
             if (order == null || order.TotalItems == 0) {
+                return null;
+            }
+
+            if (order.PaymentMethodId != 2 && order.Paid != true) {
                 return null;
             }
 
@@ -83,7 +90,11 @@ namespace BL {
             RefundCreateOptions options = new RefundCreateOptions { PaymentIntent = onlinePayment.PaymentId};
             RefundService service = new RefundService();
 
-            var response = service.Create(options);
+            try {
+                var response = service.Create(options);
+            } catch {
+                return null;
+            }
 
             onlinePayment.PaymentStatus = PaymentStatus.RETURNED;
 

@@ -11,7 +11,7 @@ namespace DAL {
         }
 
         public List<Order> GetAll(string? userId, string? searchString, string? status) {
-            IEnumerable<Order> orders = _context.Orders.
+            IQueryable<Order> orders = _context.Orders.
                 Include(o => o.OrderDetails).
                     ThenInclude(i => i.Product).
                     ThenInclude(p => p.Brand).

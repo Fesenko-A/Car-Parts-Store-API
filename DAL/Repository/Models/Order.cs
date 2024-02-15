@@ -24,6 +24,7 @@ namespace DAL.Repository.Models {
         [ForeignKey(nameof(PaymentMethodId))]
         public PaymentMethod PaymentMethod { get; set; }
         public DateTime LastUpdate { get; set; } = DateTime.UtcNow;
+        public bool? Paid { get; set; } = false;
 
         public IEnumerable<OrderDetails> OrderDetails { get; set; }
     }
