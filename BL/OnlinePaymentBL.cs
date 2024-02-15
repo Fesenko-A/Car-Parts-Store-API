@@ -65,6 +65,7 @@ namespace BL {
             }
 
             order.Paid = true;
+            order.PaymentMethodId = 2;
             await _orderDAL.Update(order);
 
             return onlinePayment;
