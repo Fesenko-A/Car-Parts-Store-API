@@ -71,7 +71,6 @@ namespace BL {
             }
 
             orderFromDb.LastUpdate = DateTime.UtcNow;
-            orderFromDb.Paid = orderToUpdate.Paid;
 
             if (!string.IsNullOrEmpty(orderToUpdate.PickupName)) {
                 orderFromDb.PickupName = orderToUpdate.PickupName;
@@ -87,6 +86,10 @@ namespace BL {
 
             if (!string.IsNullOrEmpty(orderToUpdate.PickupEmail)) {
                 orderFromDb.PickupEmail = orderToUpdate.PickupEmail;
+            }
+
+            if (orderToUpdate.Paid != null) {
+                orderFromDb.Paid = orderToUpdate.Paid;
             }
 
             if (orderToUpdate.PaymentMethodId != null && orderToUpdate.PaymentMethodId != 0) {
