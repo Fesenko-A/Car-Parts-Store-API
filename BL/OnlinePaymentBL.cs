@@ -55,6 +55,7 @@ namespace BL {
                 PaymentDate = DateTime.UtcNow,
                 ClientSecret = response.ClientSecret,
                 PaymentAmount = (double)options.Amount / 100,
+                UserId = order.UserId
             };
 
             await _onlinePaymentDAL.Create(onlinePayment);
