@@ -10,47 +10,27 @@ namespace API.Controllers {
     [ApiController]
     public class PaymentMethodController : ControllerBase {
         private readonly PaymentMethodBL _bl;
-        private readonly ApiResponse _response;
 
         public PaymentMethodController() {
             _bl = new PaymentMethodBL();
-            _response = new ApiResponse();
         }
 
         [HttpGet]
         public async Task<ActionResult<ApiResponse>> GetAll() {
             var methodsFromDb = await _bl.GetAll();
-
-            if (methodsFromDb == null) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
-            }
-
-            _response.Result = methodsFromDb;
-            return Ok(methodsFromDb);
+            return Ok(new ApiResponse(methodsFromDb));
         }
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult<ApiResponse>> Create(PaymentMethodDto methodToCreate) {
-            if (ModelState.IsValid) {
-                var paymentMethodCreated = await _bl.Create(methodToCreate);
+            var result = await _bl.Create(methodToCreate);
 
-                if (paymentMethodCreated == null) {
-                    _response.IsSuccess = false;
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    return BadRequest(_response);
-                }
+            if (result.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result.Message));
+            }
 
-                _response.Result = paymentMethodCreated;
-                return Ok(paymentMethodCreated);
-            }
-            else {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
-            }
+            return Ok(new ApiResponse(result.Value));
         }
     }
 }

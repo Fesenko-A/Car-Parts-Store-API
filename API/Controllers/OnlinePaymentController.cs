@@ -7,67 +7,48 @@ namespace API.Controllers {
     [ApiController]
     public class OnlinePaymentController : ControllerBase {
         private readonly OnlinePaymentBL _bl;
-        private readonly ApiResponse _response;
 
         public OnlinePaymentController() {
             _bl = new OnlinePaymentBL();
-            _response = new ApiResponse();
         }
 
         [HttpGet]
-        public ActionResult<ApiResponse> GetAll(string? userId, string? status) {
-            var payments = _bl.GetAll(userId, status);
-            _response.Result = payments;
-
-            return Ok(_response);
+        public async Task<ActionResult<ApiResponse>> GetAll(string? userId, string? status) {
+            var payments = await _bl.GetAll(userId, status);
+            return Ok(new ApiResponse(payments));
         }
 
         [HttpGet("{orderId:int}")]
         public async Task<ActionResult<ApiResponse>> GetByOrderId(int orderId) {
-            if (orderId == 0) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
-            }
-
             var payment = await _bl.GetByOrderId(orderId);
 
-            if (payment == null) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
+            if (payment.Value == null) {
+                return NotFound(new ApiResponse(HttpStatusCode.NotFound, false, payment.Message));
             }
 
-            _response.Result = payment;
-            return Ok(_response);
+            return Ok(new ApiResponse(payment.Value));
         }
 
         [HttpPost("{orderId:int}")]
         public async Task<ActionResult<ApiResponse>> Create(int orderId) {
             var payment = await _bl.Create(orderId);
 
-            if (payment == null) {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                return BadRequest(_response);
+            if (payment?.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, payment?.Message));
             }
 
-            _response.Result = payment;
-            return Ok(payment);
+            return Ok(new ApiResponse(payment.Value));
         }
 
         [HttpPut("{orderId:int}")]
         public async Task<ActionResult<ApiResponse>> Cancel(int orderId) {
             var cancelledPayment = await _bl.Cancel(orderId);
 
-            if (cancelledPayment == null) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
+            if (cancelledPayment.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, cancelledPayment.Message));
             }
 
-            _response.Result = cancelledPayment;
-            return Ok(_response);
+            return Ok(new ApiResponse(cancelledPayment.Value));
         }
     }
 }

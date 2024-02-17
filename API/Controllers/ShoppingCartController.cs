@@ -7,38 +7,31 @@ namespace API.Controllers {
     [ApiController]
     public class ShoppingCartController : ControllerBase {
         private readonly ShoppingCartBL _bl;
-        private readonly ApiResponse _response;
 
         public ShoppingCartController() {
             _bl = new ShoppingCartBL();
-            _response = new ApiResponse();
         }
 
         [HttpGet]
         public async Task<ActionResult<ApiResponse>> Get(string userId) {
-            var shoppingCart = await _bl.Get(userId);
+            var result = await _bl.Get(userId);
 
-            if (shoppingCart == null) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
+            if (result.Value == null) {
+                return NotFound(new ApiResponse(HttpStatusCode.NotFound, false, result.Message));
             }
 
-            _response.Result = shoppingCart;
-            return Ok(_response);
+            return Ok(new ApiResponse(result.Value));
         }
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse>> Upsert(string userId, int productId, int updateQuantityBy) {
-            bool isSuccess = await _bl.Upsert(userId, productId, updateQuantityBy);
+            var result = await _bl.Upsert(userId, productId, updateQuantityBy);
 
-            if (!isSuccess) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
+            if (result?.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result?.Message));
             }
 
-            return Ok(_response);
+            return Ok(new ApiResponse(result.Value));
         }
     }
 }

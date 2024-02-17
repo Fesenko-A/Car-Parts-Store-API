@@ -11,40 +11,27 @@ namespace API.Controllers {
     [ApiController]
     public class BrandController : ControllerBase, IProductDetails<BrandDto> {
         private readonly BrandBL _bl;
-        private readonly ApiResponse _response;
 
         public BrandController() {
             _bl = new BrandBL();
-            _response = new ApiResponse();
         }
 
         [HttpGet]
         public async Task<ActionResult<ApiResponse>> GetAll() {
             var brands = await _bl.GetAll();
-            _response.Result = brands;
-            return Ok(_response);
+            return Ok(new ApiResponse(brands));
         }
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult<ApiResponse>> Create([FromForm] BrandDto brandDto) {
-            if (ModelState.IsValid) {
-                var brand = await _bl.Create(brandDto);
+            var result = await _bl.Create(brandDto);
 
-                if (brand == null) {
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.IsSuccess = false;
-                    return BadRequest(_response);
-                }
+            if (result.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result.Message));
+            }
 
-                _response.Result = brand;
-                return Ok(_response);
-            }
-            else {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                return BadRequest(_response);
-            }
+            return Ok(new ApiResponse(result.Value));
         }
     }
 }

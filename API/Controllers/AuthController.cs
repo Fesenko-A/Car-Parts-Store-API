@@ -10,36 +10,31 @@ namespace API.Controllers {
     [ApiController]
     public class AuthController : ControllerBase {
         private readonly AuthBL _bl;
-        private readonly ApiResponse _response;
 
         public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager) {
             _bl = new AuthBL(userManager, roleManager);
-            _response = new ApiResponse();
         }
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse>> Register(RegisterRequestDto registerRequest) {
-            bool isSuccess = await _bl.Register(registerRequest);
-            if (!isSuccess) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
+            var result = await _bl.Register(registerRequest);
+
+            if (result?.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result?.Message));
             }
 
-            return Ok(_response);
+            return Ok(new ApiResponse(result.Value));
         }
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse>> Login(LoginRequestDto loginRequest) {
-            LoginResponseDto? loginResponse = await _bl.Login(loginRequest);
-            if (loginResponse == null) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
+            var result = await _bl.Login(loginRequest);
+
+            if (result.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result.Message));
             }
 
-            _response.Result = loginResponse;
-            return Ok(_response);
+            return Ok(new ApiResponse(result.Value));
         }
     }
 }

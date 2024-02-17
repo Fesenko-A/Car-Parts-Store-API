@@ -14,6 +14,12 @@ namespace API {
             ErrorMessage = errorMessage;
         }
 
+        public ApiResponse(HttpStatusCode statusCode, bool isSuccess, string? errorMessage) {
+            StatusCode = statusCode;
+            IsSuccess = isSuccess;
+            ErrorMessage = errorMessage;
+        }
+
         public ApiResponse(object successfulResult) {
             Result = successfulResult;
         }

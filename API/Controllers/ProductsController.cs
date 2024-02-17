@@ -10,100 +10,62 @@ namespace API.Controllers {
     [ApiController]
     public class ProductsController : ControllerBase {
         private readonly ProductBL _bl;
-        private readonly ApiResponse _response;
 
         public ProductsController() {
             _bl = new ProductBL();
-            _response = new ApiResponse();
         }
 
         [HttpGet]
         public async Task<ActionResult<ApiResponse>> GetAll() {
             var products = await _bl.GetAllProducts();
-            _response.Result = products;
-            return Ok(_response);
+            return Ok(new ApiResponse(products));
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ApiResponse>> Get(int id) {
-            var product = await _bl.GetProduct(id);
+            var result = await _bl.GetProduct(id);
 
-            if (id == 0) {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                return BadRequest(_response);
+            if (result.Value == null) {
+                return NotFound(new ApiResponse(HttpStatusCode.NotFound, false, result.Message));
             }
 
-            if (product == null) {
-                _response.StatusCode = HttpStatusCode.NotFound;
-                _response.IsSuccess = false;
-                return NotFound(_response);
-            }
-
-            _response.Result = product;
-            return Ok(_response);
+            return Ok(new ApiResponse(result.Value));
         }
 
         [HttpPost]
         [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult<ApiResponse>> Create([FromForm] ProductDto productDto) {
-            if (ModelState.IsValid) {
-                var product = await _bl.CreateProduct(productDto);
+            var result = await _bl.CreateProduct(productDto);
 
-                if (product == null) {
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.IsSuccess = false;
-                    return BadRequest(_response);
-                }
+            if (result.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result.Message));
+            }
 
-                _response.Result = product;
-                return Ok(_response);
-            }
-            else {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
-            }
+            return Ok(new ApiResponse(result.Value));
         }
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult<ApiResponse>> Update(int id, [FromForm] ProductDto productUpdateBody) {
-            if (id == 0 || !ModelState.IsValid) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
+            var result = await _bl.UpdateProduct(id, productUpdateBody);
+
+            if (result.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result.Message));
             }
 
-            var product = await _bl.UpdateProduct(id, productUpdateBody);
-            if (product == null) {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                return BadRequest(_response);
-            }
-
-            _response.Result = product;
-            return Ok(_response);
+            return Ok(new ApiResponse(result.Value));
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = Roles.ADMIN)]
         public async Task<ActionResult<ApiResponse>> Delete(int id) {
-            if (id == 0) { 
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
+            var result = await _bl.DeleteProduct(id);
+
+            if (result?.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result?.Message));
             }
 
-            bool success = await _bl.DeleteProduct(id);
-            if (!success) {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return BadRequest(_response);
-            }
-
-            _response.StatusCode = HttpStatusCode.NoContent;
-            return Ok(_response);
+            return Ok(new ApiResponse(result.Value));
         }
     }
 }
