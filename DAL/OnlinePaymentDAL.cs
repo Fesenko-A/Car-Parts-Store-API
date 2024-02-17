@@ -15,7 +15,7 @@ namespace DAL {
             return paymentFromDb;
         }
 
-        public List<OnlinePayment> GetAll(string? userId, string? status) {
+        public async Task<List<OnlinePayment>> GetAll(string? userId, string? status) {
             IQueryable<OnlinePayment> payments = _context.OnlinePayments.Include(o => o.Order);
 
             if (!string.IsNullOrEmpty(userId)) {
@@ -26,7 +26,7 @@ namespace DAL {
                 payments = payments.Where(s => s.PaymentStatus == status);
             }
 
-            return payments.ToList();
+            return await payments.ToListAsync();
         }
 
         public async Task<OnlinePayment?> GetByOrderId(int id) {

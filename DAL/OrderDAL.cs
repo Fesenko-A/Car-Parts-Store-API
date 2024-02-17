@@ -10,7 +10,7 @@ namespace DAL {
             _context = new ApplicationDbContext();
         }
 
-        public List<Order> GetAll(string? userId, string? searchString, string? status) {
+        public async Task<List<Order>> GetAll(string? userId, string? searchString, string? status) {
             IQueryable<Order> orders = _context.Orders.
                 Include(o => o.OrderDetails).
                     ThenInclude(i => i.Product).
@@ -40,7 +40,7 @@ namespace DAL {
                 orders = orders.Where(u => u.Status.ToLower() == status.ToLower());
             }
 
-            return orders.ToList();
+            return await orders.ToListAsync();
         }
 
         public async Task<Order> Get(int id) {
