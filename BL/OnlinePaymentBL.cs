@@ -1,5 +1,4 @@
 ﻿using Auth;
-using BL.Models;
 using DAL.Constants;
 using DAL.Repository.Models;
 using Stripe;
@@ -14,26 +13,35 @@ namespace BL {
             _onlinePaymentDAL = new DAL.OnlinePaymentDAL();
         }
 
-        public List<OnlinePayment> GetAll(string? userId, string? status) {
-            var payments = _onlinePaymentDAL.GetAll(userId, status);
+        public async Task<List<OnlinePayment>> GetAll(string? userId, string? status) {
+            var payments = await _onlinePaymentDAL.GetAll(userId, status);
             return payments;
         }
 
-        public async Task<OnlinePayment?> GetByOrderId(int orderId) {
-            OnlinePayment? payment = await _onlinePaymentDAL.GetByOrderId(orderId);
-            return payment;
+        public async Task<ErrorOr<OnlinePayment?>> GetByOrderId(int orderId) {
+            var payment = await _onlinePaymentDAL.GetByOrderId(orderId);
+            
+            if (payment == null) {
+                return new ErrorOr<OnlinePayment?>("Online payment not found");
+            }
+
+            return new ErrorOr<OnlinePayment?>(payment);
         }
 
-        public async Task<OnlinePayment?> Create(int orderId) {
+        public async Task<ErrorOr<OnlinePayment>> Create(int orderId) {
             Order? order = await _orderDAL.Get(orderId);
 
-            if (order == null || order.TotalItems == 0) {
-                return null;
+            if (order == null) {
+                return new ErrorOr<OnlinePayment>("Order not found");
+            }
+
+            if (order.TotalItems == 0) {
+                return new ErrorOr<OnlinePayment>("Order cannot have 0 totalItems");
             }
 
             OnlinePayment? paymentCheck = await _onlinePaymentDAL.GetByOrderId(orderId);
             if (paymentCheck != null) {
-                return null;
+                return new ErrorOr<OnlinePayment>("Online payment already exists for this order");
             }
 
             StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
@@ -62,30 +70,34 @@ namespace BL {
 
             OnlinePayment? paymentFromDb = await _onlinePaymentDAL.Get(onlinePayment.Id);
             if (paymentFromDb == null) {
-                return null;
+                return new ErrorOr<OnlinePayment>("Error while creating online payment");
             }
 
             order.Paid = true;
             order.PaymentMethodId = 2;
             await _orderDAL.Update(order);
 
-            return onlinePayment;
+            return new ErrorOr<OnlinePayment>(onlinePayment);
         }
 
-        public async Task<OnlinePayment?> Cancel(int orderId) {
+        public async Task<ErrorOr<OnlinePayment>> Cancel(int orderId) {
             Order? order = await _orderDAL.Get(orderId);
 
-            if (order == null || order.TotalItems == 0) {
-                return null;
+            if (order == null) {
+                return new ErrorOr<OnlinePayment>("Order not found");
+            }
+
+            if (order.TotalItems == 0) {
+                return new ErrorOr<OnlinePayment>("Order cannot have 0 totalItems");
             }
 
             if (order.PaymentMethodId != 2 && order.Paid != true) {
-                return null;
+                return new ErrorOr<OnlinePayment>("Payment method for this order is set to cash");
             }
 
             OnlinePayment? onlinePayment = await _onlinePaymentDAL.GetByOrderId(orderId);
             if (onlinePayment == null) {
-                return null;
+                return new ErrorOr<OnlinePayment>("No payment to refund (order not paid)");
             }
 
             StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
@@ -95,21 +107,25 @@ namespace BL {
             try {
                 var response = service.Create(options);
             } catch {
-                return null;
+                return new ErrorOr<OnlinePayment>("Error while creating refund");
             }
 
             onlinePayment.PaymentStatus = PaymentStatus.RETURNED;
 
             bool updated = await Update(onlinePayment.Id, onlinePayment);
             if (updated == false) {
-                return null;
+                return new ErrorOr<OnlinePayment>("Error while updating payment");
             }
 
             OnlinePayment? refundedPayment = await _onlinePaymentDAL.Get(onlinePayment.Id);
-            return refundedPayment;
+            if (refundedPayment == null) {
+                return new ErrorOr<OnlinePayment>("Error while getting payment");
+            }
+
+            return new ErrorOr<OnlinePayment>(refundedPayment);
         }
 
-        public async Task<bool> Update(int id, OnlinePayment paymentToUpdate) {
+        private async Task<bool> Update(int id, OnlinePayment paymentToUpdate) {
             if (id != paymentToUpdate.Id) { 
                 return false; 
             }

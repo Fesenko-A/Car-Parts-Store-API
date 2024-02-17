@@ -11,17 +11,22 @@ namespace BL {
             _dal = new DAL.OrderDAL();
         }
 
-        public List<Order> GetAll(string? userId, string? searchString, string? status) {
-            var ordersFromDb = _dal.GetAll(userId, searchString, status);
+        public async Task<List<Order>> GetAll(string? userId, string? searchString, string? status) {
+            var ordersFromDb = await _dal.GetAll(userId, searchString, status);
             return ordersFromDb;
         }
 
-        public async Task<Order?> Get(int id) {
+        public async Task<ErrorOr<Order>> Get(int id) {
             Order? order = await _dal.Get(id);
-            return order;
+
+            if (order == null) {
+                return new ErrorOr<Order>("Order not found");
+            }
+
+            return new ErrorOr<Order>(order);
         }
 
-        public async Task<Order?> Create(OrderCreateDto orderToCreate) {
+        public async Task<ErrorOr<Order>> Create(OrderCreateDto orderToCreate) {
             Order order = new Order {
                 UserId = orderToCreate.UserId,
                 PickupEmail = orderToCreate.PickupEmail,
@@ -53,21 +58,30 @@ namespace BL {
                 await _dal.Save();
             }
             catch (DbUpdateException) {
-                return null;
+                return new ErrorOr<Order>("Error while creating Order");
             }
 
             Order orderFromDb = await _dal.Get(order.OrderId);
-            return orderFromDb;
+
+            if (orderFromDb == null) {
+                return new ErrorOr<Order>("Error while getting Order");
+            }
+
+            return new ErrorOr<Order>(orderFromDb);
         }
 
-        public async Task<bool> Update(int id, OrderUpdateDto orderToUpdate) {
-            if (orderToUpdate == null || id != orderToUpdate.OrderId) {
-                return false;
+        public async Task<ErrorOr<Order>> Update(int id, OrderUpdateDto orderToUpdate) {
+            if (orderToUpdate == null) {
+                return new ErrorOr<Order>("Update body empty");
+            }
+
+            if (id != orderToUpdate.OrderId) {
+                return new ErrorOr<Order>("IDs not match");
             }
 
             Order orderFromDb = await _dal.Get(id);
             if (orderFromDb == null) {
-                return false;
+                return new ErrorOr<Order>("Order not found");
             }
 
             orderFromDb.LastUpdate = DateTime.UtcNow;
@@ -96,8 +110,7 @@ namespace BL {
                 orderFromDb.PaymentMethodId = orderToUpdate.PaymentMethodId;
             }
 
-            await _dal.Update(orderFromDb); 
-            return true;
+            return new ErrorOr<Order>(orderFromDb);
         }
     }
 }

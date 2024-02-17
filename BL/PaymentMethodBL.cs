@@ -14,7 +14,7 @@ namespace BL {
             return paymentMethods;
         }
 
-        public async Task<PaymentMethod?> Create(PaymentMethodDto paymentMethodToCreate) {
+        public async Task<ErrorOr<PaymentMethod>> Create(PaymentMethodDto paymentMethodToCreate) {
             PaymentMethod newPaymentMethod = new PaymentMethod {
                 Description = paymentMethodToCreate.Description,
             };
@@ -23,11 +23,16 @@ namespace BL {
                 await _dal.Create(newPaymentMethod);
             }
             catch (DbUpdateException) {
-                return null;
+                return new ErrorOr<PaymentMethod>("Error while creating Payment Method");
             }
 
             PaymentMethod paymentMethodFromDb = await _dal.Get(newPaymentMethod.PaymentMethodId);
-            return paymentMethodFromDb;
+
+            if (paymentMethodFromDb == null) {
+                return new ErrorOr<PaymentMethod>("Error while getting Payment Method");
+            }
+
+            return new ErrorOr<PaymentMethod>(paymentMethodFromDb);
         }
     }
 }

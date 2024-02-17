@@ -6,8 +6,7 @@ namespace BL {
     public class ProductBL {
         private readonly DAL.ProductDAL _dal;
 
-        public ProductBL()
-        {
+        public ProductBL() {
             _dal = new DAL.ProductDAL();
         }
 
@@ -16,12 +15,17 @@ namespace BL {
             return productsFromDb;
         }
 
-        public async Task<Product?> GetProduct(int id) {
+        public async Task<ErrorOr<Product>> GetProduct(int id) {
             Product? productFromDb = await _dal.GetProduct(id);
-            return productFromDb;
+            
+            if (productFromDb == null) {
+                return new ErrorOr<Product>("Product not found");
+            }
+
+            return new ErrorOr<Product>(productFromDb);
         }
 
-        public async Task<Product?> CreateProduct(ProductDto productDto) {
+        public async Task<ErrorOr<Product>> CreateProduct(ProductDto productDto) {
             Product product = new Product {
                 BrandId = productDto.BrandId,
                 Name = productDto.Name,
@@ -35,18 +39,23 @@ namespace BL {
             try {
                 await _dal.CreateProduct(product);
             } catch (DbUpdateException) {
-                return null;
+                return new ErrorOr<Product>("Error while creating Product");
             }
 
-            Product createdProduct = await _dal.GetProduct(product.Id);
-            return createdProduct;
+            Product? createdProduct = await _dal.GetProduct(product.Id);
+
+            if (createdProduct == null) {
+                return new ErrorOr<Product>("Error while getting Product");
+            }
+
+            return new ErrorOr<Product>(createdProduct);
         }
 
-        public async Task<Product?> UpdateProduct(int id, ProductDto productUpdateBody) {
+        public async Task<ErrorOr<Product>> UpdateProduct(int id, ProductDto productUpdateBody) {
             Product? productToUpdate = await _dal.GetProduct(id);
 
             if (productToUpdate == null) {
-                return null;
+                return new ErrorOr<Product>("Product not found");
             }
 
             productToUpdate.BrandId = productUpdateBody.BrandId;
@@ -59,23 +68,28 @@ namespace BL {
 
             try {
                 await _dal.UpdateProduct(productToUpdate);
-            } catch (DbUpdateException) { 
-                return null; 
+            } catch (DbUpdateException) {
+                return new ErrorOr<Product>("Error while updating Product");
             }
 
-            Product updatedProduct = await _dal.GetProduct(id);
-            return updatedProduct;
+            Product? updatedProduct = await _dal.GetProduct(id);
+
+            if (updatedProduct == null) {
+                return new ErrorOr<Product>("Error while getting Product");
+            }
+
+            return new ErrorOr<Product>(updatedProduct);
         }
 
-        public async Task<bool> DeleteProduct(int id) {
+        public async Task<ErrorOr<bool>> DeleteProduct(int id) {
             Product? productToDelete = await _dal.GetProduct(id);
 
-            if (productToDelete == null) { 
-                return false; 
+            if (productToDelete == null) {
+                return new ErrorOr<bool>("Product not found");
             }
 
             await _dal.DeleteProduct(productToDelete);
-            return true;
+            return new ErrorOr<bool>(true);
         }
     }
 }

@@ -19,11 +19,11 @@ namespace BL
             _roleManager = roleManager;
         }
 
-        public async Task<bool> Register(RegisterRequestDto registerRequest) {
+        public async Task<ErrorOr<bool>> Register(RegisterRequestDto registerRequest) {
             AppUser? userFromDb = await _dal.GetUser(registerRequest.UserName);
 
             if (userFromDb != null) {
-                return false;
+                return new ErrorOr<bool>("User with this username already exists");
             }
 
             AppUser newUser = new AppUser {
@@ -48,18 +48,18 @@ namespace BL
                 }
             }
 
-            return true;
+            return new ErrorOr<bool>(true);
         }
     
-        public async Task<LoginResponseDto?> Login(LoginRequestDto loginRequest) {
+        public async Task<ErrorOr<LoginResponseDto>> Login(LoginRequestDto loginRequest) {
             AppUser? userFromDb = await _dal.GetUser(loginRequest.UserName);
             if (userFromDb == null) {
-                return null;
+                return new ErrorOr<LoginResponseDto>("User not found");
             }
 
             bool isValid = await _userManager.CheckPasswordAsync(userFromDb, loginRequest.Password);
             if (!isValid) {
-                return null;
+                return new ErrorOr<LoginResponseDto>("Incorrect password");
             }
 
             var roles = await _userManager.GetRolesAsync(userFromDb);
@@ -85,10 +85,10 @@ namespace BL
             };
 
             if (loginResponse.Email == null || loginResponse.Token == null) {
-                return null;
+                return new ErrorOr<LoginResponseDto>("Error while logging in");
             }
 
-            return loginResponse;
+            return new ErrorOr<LoginResponseDto>(loginResponse);
         }
     }
 }

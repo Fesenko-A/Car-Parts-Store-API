@@ -11,7 +11,7 @@ namespace BL {
             _cartItemDal = new DAL.CartItemDAL();
         }
 
-        public async Task<ShoppingCart?> Get(string userId) {
+        public async Task<ErrorOr<ShoppingCart>> Get(string userId) {
             ShoppingCart? shoppingCart;
 
             if (string.IsNullOrEmpty(userId)) {
@@ -22,20 +22,20 @@ namespace BL {
             }
 
             if (shoppingCart == null) {
-                return null;
+                return new ErrorOr<ShoppingCart>("Shopping Cart not found");
             }
 
             shoppingCart.CartTotal = shoppingCart.CartItems.Sum(u => u.Quantity * u.Product.Price);
 
-            return shoppingCart;
+            return new ErrorOr<ShoppingCart>(shoppingCart);
         }
 
-        public async Task<bool> Upsert(string userId, int productId, int updateQuantityBy) {
+        public async Task<ErrorOr<bool>> Upsert(string userId, int productId, int updateQuantityBy) {
             ShoppingCart? shoppingCart = await _shoppingCartDal.Get(userId);
             Product? product = await _productDal.GetProduct(productId);
 
-            if (product == null) { 
-                return false; 
+            if (product == null) {
+                return new ErrorOr<bool>("Product not found");
             }
 
             if (shoppingCart == null && updateQuantityBy > 0) {
@@ -56,7 +56,7 @@ namespace BL {
 
                 if (itemInCart == null) {
                     if (updateQuantityBy <= 0) {
-                        return false;
+                        return new ErrorOr<bool>("Cannot update updateQuantityBy with this value");
                     }
 
                     CartItem newCartItem = new CartItem {
@@ -84,7 +84,7 @@ namespace BL {
                 }
             }
 
-            return true;
+            return new ErrorOr<bool>(true);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using BL.Interfaces;
 using BL.Models;
 using DAL.Repository.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace BL {
     public class BrandBL : IProductDetailsBL<Brand, BrandDto> {
@@ -11,24 +10,25 @@ namespace BL {
             _dal = new DAL.BrandDAL();
         }
 
-        public async Task<Brand?> Create(BrandDto dto) {
+        public async Task<ErrorOr<Brand>> Create(BrandDto dto) {
             Brand? brandFromDb = await _dal.FindByName(dto.Name);
 
-            if (brandFromDb == null) {
-                Brand brand = new Brand {
-                    Name = dto.Name
-                };
-
-                try {
-                    await _dal.Create(brand);
-                    return await _dal.GetById(brand.Id);
-                }
-                catch (DbUpdateException) {
-                    return null;
-                }
+            if (brandFromDb != null) {
+                return new ErrorOr<Brand>("Brand already exists");
             }
 
-            return brandFromDb;
+            Brand brand = new Brand {
+                Name = dto.Name
+            };
+
+            await _dal.Create(brand);
+            brandFromDb = await _dal.GetById(brand.Id);
+
+            if (brandFromDb == null) {
+                return new ErrorOr<Brand>("Error while getting Brand");
+            }
+
+            return new ErrorOr<Brand>(brandFromDb);
         }
 
         public async Task<List<Brand>> GetAll() {

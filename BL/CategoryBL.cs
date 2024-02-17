@@ -1,8 +1,6 @@
 ﻿using BL.Interfaces;
 using BL.Models;
-using DAL;
 using DAL.Repository.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace BL {
     public class CategoryBL : IProductDetailsBL<Category, CategoryDto> {
@@ -12,24 +10,25 @@ namespace BL {
             _dal = new DAL.CategoryDAL();
         }
 
-        public async Task<Category?> Create(CategoryDto dto) {
+        public async Task<ErrorOr<Category>> Create(CategoryDto dto) {
             Category? categoryFromDb = await _dal.FindByName(dto.Name);
 
-            if (categoryFromDb == null) {
-                Category category = new Category {
-                    Name = dto.Name
-                };
-
-                try {
-                    await _dal.Create(category);
-                    return await _dal.GetById(category.Id);
-                }
-                catch (DbUpdateException) {
-                    return null;
-                }
+            if (categoryFromDb != null) {
+                return new ErrorOr<Category>("Category already exists");
             }
 
-            return categoryFromDb;
+            Category category = new Category {
+                Name = dto.Name
+            };
+
+            await _dal.Create(category);
+            categoryFromDb = await _dal.GetById(category.Id);
+
+            if (categoryFromDb == null) {
+                return new ErrorOr<Category>("Error while getting Category");
+            }
+
+            return new ErrorOr<Category>(categoryFromDb);
         }
 
         public async Task<List<Category>> GetAll() {

@@ -1,7 +1,6 @@
 ﻿using BL.Interfaces;
 using BL.Models;
 using DAL.Repository.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace BL {
     public class SpecialTagBL : IProductDetailsBL<SpecialTag, SpecialTagDto> {
@@ -11,29 +10,30 @@ namespace BL {
             _dal = new DAL.SpecialTagDAL();
         }
 
-        public async Task<SpecialTag?> Create(SpecialTagDto dto) {
+        public async Task<ErrorOr<SpecialTag>> Create(SpecialTagDto dto) {
             SpecialTag? specialTagFromDb = await _dal.FindByName(dto.Name);
 
-            if (specialTagFromDb == null) {
-                SpecialTag specialTag = new SpecialTag {
-                    Name = dto.Name
-                };
-
-                try {
-                    await _dal.Create(specialTag);
-                    return await _dal.GetById(specialTag.Id);
-                }
-                catch (DbUpdateException) {
-                    return null;
-                }
+            if (specialTagFromDb != null) {
+                return new ErrorOr<SpecialTag>("Special tag already exists");
             }
 
-            return specialTagFromDb;
+            SpecialTag specialTag = new SpecialTag {
+                Name = dto.Name
+            };
+
+            await _dal.Create(specialTag);
+            specialTagFromDb = await _dal.GetById(specialTag.Id);
+
+            if (specialTagFromDb == null) {
+                return new ErrorOr<SpecialTag>("Error while getting Special tag");
+            }
+
+            return new ErrorOr<SpecialTag>(specialTagFromDb);
         }
 
         public async Task<List<SpecialTag>> GetAll() {
-            List<SpecialTag> categories = await _dal.GetAll();
-            return categories;
+            List<SpecialTag> specialTags = await _dal.GetAll();
+            return specialTags;
         }
     }
 }
