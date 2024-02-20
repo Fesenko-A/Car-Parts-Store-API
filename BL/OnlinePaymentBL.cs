@@ -1,16 +1,21 @@
 ﻿using Auth;
+using Azure;
+using BL.Models;
 using DAL.Constants;
 using DAL.Repository.Models;
 using Stripe;
+using System.Net;
 
 namespace BL {
     public class OnlinePaymentBL {
         private readonly DAL.OrderDAL _orderDAL;
         private readonly DAL.OnlinePaymentDAL _onlinePaymentDAL;
+        private readonly DAL.ShoppingCartDAL _shoppingCartDAL;
 
         public OnlinePaymentBL() {
             _orderDAL = new DAL.OrderDAL();
             _onlinePaymentDAL = new DAL.OnlinePaymentDAL();
+            _shoppingCartDAL = new DAL.ShoppingCartDAL();
         }
 
         public async Task<List<OnlinePayment>> GetAll(string? userId, string? status) {
@@ -28,7 +33,7 @@ namespace BL {
             return new ErrorOr<OnlinePayment?>(payment);
         }
 
-        public async Task<ErrorOr<OnlinePayment>> Create(int orderId) {
+        public async Task<ErrorOr<OnlinePayment>> Create(int orderId, string paymentId) {
             Order? order = await _orderDAL.Get(orderId);
 
             if (order == null) {
@@ -44,25 +49,12 @@ namespace BL {
                 return new ErrorOr<OnlinePayment>("Online payment already exists for this order");
             }
 
-            StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
-            PaymentIntentCreateOptions options = new PaymentIntentCreateOptions {
-                Amount = (int)(order.OrderTotal * 100),
-                Currency = "usd",
-                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions {
-                    Enabled = true
-                }
-            };
-
-            PaymentIntentService service = new PaymentIntentService();
-            PaymentIntent response = service.Create(options);
-
             OnlinePayment onlinePayment = new OnlinePayment {
                 OrderId = orderId,
-                PaymentId = response.Id,
+                PaymentId = paymentId,
                 PaymentStatus = PaymentStatus.PAID,
                 PaymentDate = DateTime.UtcNow,
-                ClientSecret = response.ClientSecret,
-                PaymentAmount = (double)options.Amount / 100,
+                PaymentAmount = (double)order.OrderTotal,
                 UserId = order.UserId
             };
 
@@ -123,6 +115,35 @@ namespace BL {
             }
 
             return new ErrorOr<OnlinePayment>(refundedPayment);
+        }
+
+        public async Task<ErrorOr<StripeIntent>> CreateIntent(string userId) {
+            ShoppingCart? shoppingCart = await _shoppingCartDAL.Get(userId);
+
+            if (shoppingCart == null) {
+                return new ErrorOr<StripeIntent>("Shopping Cart not found");
+            }
+
+            if (shoppingCart.CartItems == null || shoppingCart.CartItems.Count() == 0) {
+                return new ErrorOr<StripeIntent>("Shopping Cart is empty");
+            }
+
+            StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
+            shoppingCart.CartTotal = shoppingCart.CartItems.Sum(u => u.Quantity * u.Product.Price);
+
+            PaymentIntentCreateOptions options = new PaymentIntentCreateOptions {
+                Amount = (int)(shoppingCart.CartTotal * 100),
+                Currency = "usd",
+                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions {
+                    Enabled = true,
+                },
+            };
+            PaymentIntentService service = new PaymentIntentService();
+            PaymentIntent response = service.Create(options);
+
+            StripeIntent successfulIntent = new StripeIntent { PaymentId = response.Id, ClientSecret = response.ClientSecret };
+            
+            return new ErrorOr<StripeIntent>(successfulIntent);
         }
 
         private async Task<bool> Update(int id, OnlinePayment paymentToUpdate) {

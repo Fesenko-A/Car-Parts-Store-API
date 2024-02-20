@@ -15,8 +15,5 @@ namespace DAL.Repository.Models {
         public AppUser? User { get; set; }
         public DateTime PaymentDate { get; set; }
         public DateTime LastUpdate { get; set; } = DateTime.UtcNow;
-
-        [NotMapped]
-        public string ClientSecret { get; set; }
     }
 }
