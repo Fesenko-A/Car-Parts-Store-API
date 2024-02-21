@@ -44,6 +44,7 @@ namespace API.Controllers {
             return Ok(new ApiResponse(result.Value));
         }
 
+        [Authorize(Roles = Roles.CUSTOMER)]
         [Authorize(Roles = Roles.ADMIN)]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<ApiResponse>> Update(int id, [FromBody] OrderUpdateDto orderToUpdate) {

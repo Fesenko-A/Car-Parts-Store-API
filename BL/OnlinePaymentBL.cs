@@ -1,10 +1,9 @@
 ﻿using Auth;
-using Azure;
 using BL.Models;
 using DAL.Constants;
+using DAL.Migrations;
 using DAL.Repository.Models;
 using Stripe;
-using System.Net;
 
 namespace BL {
     public class OnlinePaymentBL {
@@ -139,10 +138,38 @@ namespace BL {
                 },
             };
             PaymentIntentService service = new PaymentIntentService();
-            PaymentIntent response = service.Create(options);
+            PaymentIntent response = await service.CreateAsync(options);
 
             StripeIntent successfulIntent = new StripeIntent { PaymentId = response.Id, ClientSecret = response.ClientSecret };
             
+            return new ErrorOr<StripeIntent>(successfulIntent);
+        }
+
+        public async Task<ErrorOr<StripeIntent>> CreateIntent(int orderId) {
+            Order? order = await _orderDAL.Get(orderId);
+
+            if (order == null) {
+                return new ErrorOr<StripeIntent>("Order not found");
+            }
+
+            if (order.TotalItems == 0) {
+                return new ErrorOr<StripeIntent>("Order is empty");
+            }
+
+            StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
+
+            PaymentIntentCreateOptions options = new PaymentIntentCreateOptions {
+                Amount = (int)(order.OrderTotal * 100),
+                Currency = "usd",
+                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions {
+                    Enabled = true,
+                },
+            };
+            PaymentIntentService service = new PaymentIntentService();
+            PaymentIntent response = await service.CreateAsync(options);
+
+            StripeIntent successfulIntent = new StripeIntent { PaymentId = response.Id, ClientSecret = response.ClientSecret };
+
             return new ErrorOr<StripeIntent>(successfulIntent);
         }
 
