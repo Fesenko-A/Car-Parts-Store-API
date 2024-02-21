@@ -110,6 +110,13 @@ namespace BL {
                 orderFromDb.PaymentMethodId = orderToUpdate.PaymentMethodId;
             }
 
+            await _dal.Update(orderFromDb);
+            orderFromDb = await _dal.Get(id);
+
+            if (orderFromDb == null) {
+                return new ErrorOr<Order>("Order while getting order");
+            }
+
             return new ErrorOr<Order>(orderFromDb);
         }
     }
