@@ -27,7 +27,7 @@ namespace API.Controllers {
         public async Task<ActionResult<ApiResponse>> Upsert(string userId, int productId, int updateQuantityBy) {
             var result = await _bl.Upsert(userId, productId, updateQuantityBy);
 
-            if (result?.Value == null) {
+            if (result.Value == false) {
                 return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result?.Message));
             }
 
