@@ -30,6 +30,7 @@ namespace BL {
                 BrandId = productDto.BrandId,
                 Name = productDto.Name,
                 Description = productDto.Description,
+                InStock = productDto.InStock,
                 SpecialTagId = productDto.SpecialTagId,
                 CategoryId = productDto.CategoryId,
                 Price = productDto.Price,
@@ -61,6 +62,7 @@ namespace BL {
             productToUpdate.BrandId = productUpdateBody.BrandId;
             productToUpdate.Name = productUpdateBody.Name;
             productToUpdate.Description = productUpdateBody.Description;
+            productToUpdate.InStock = productUpdateBody.InStock;
             productToUpdate.SpecialTagId = productUpdateBody.SpecialTagId;
             productToUpdate.CategoryId = productUpdateBody.CategoryId;
             productToUpdate.Price = productUpdateBody.Price;
