@@ -35,7 +35,11 @@ namespace BL {
             Product? product = await _productDal.GetProduct(productId);
 
             if (product == null) {
-                return new ErrorOr<bool>("Product not found");
+                return new ErrorOr<bool>(false, "Product not found");
+            }
+
+            if (product.InStock == false) {
+                return new ErrorOr<bool>(false, "Product is out of stock");
             }
 
             if (shoppingCart == null && updateQuantityBy > 0) {
@@ -56,7 +60,7 @@ namespace BL {
 
                 if (itemInCart == null) {
                     if (updateQuantityBy <= 0) {
-                        return new ErrorOr<bool>("Cannot update updateQuantityBy with this value");
+                        return new ErrorOr<bool>(false, "Cannot update updateQuantityBy with this value");
                     }
 
                     CartItem newCartItem = new CartItem {

@@ -12,6 +12,7 @@ namespace DAL.Repository.Models {
         public Brand Brand { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public bool? InStock { get; set; }
         public int SpecialTagId { get; set; }
 
         [ForeignKey(nameof(SpecialTagId))]
