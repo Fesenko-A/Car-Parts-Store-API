@@ -11,9 +11,18 @@ namespace BL {
             _dal = new DAL.OrderDAL();
         }
 
-        public async Task<List<Order>> GetAll(string? userId, string? searchString, string? status) {
-            var ordersFromDb = await _dal.GetAll(userId, searchString, status);
-            return ordersFromDb;
+        public async Task<(ErrorOr<List<Order>>, int)> GetAll(string? userId, string? searchString, string? status, int pageNumber, int pageSize) {
+            // Item1 - list of orders, Item2 - totalRecords (pagination)
+            if (pageNumber <= 0) {
+                return (new ErrorOr<List<Order>>("Page number must be more than 0"), 0);
+            }
+
+            if (pageSize <= 0) {
+                return (new ErrorOr<List<Order>>("Page size must be more than 0"), 0);
+            }
+
+            var result = await _dal.GetAll(userId, searchString, status, pageNumber, pageSize);
+            return (new ErrorOr<List<Order>>(result.Item1), result.Item2);
         }
 
         public async Task<ErrorOr<Order>> Get(int id) {

@@ -1,11 +1,13 @@
-﻿using Auth;
+﻿using API.Utility;
+using Auth;
 using BL;
 using BL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace API.Controllers {
+namespace API.Controllers
+{
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase {

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API.Utility;
+using Microsoft.AspNetCore.Mvc;
 
-namespace API.Interfaces {
+namespace API.Interfaces
+{
     internal interface IProductDetails<T> {
         Task<ActionResult<ApiResponse>> GetAll();
 

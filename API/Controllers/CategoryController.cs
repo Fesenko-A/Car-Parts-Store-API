@@ -5,8 +5,10 @@ using API.Interfaces;
 using Auth;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using API.Utility;
 
-namespace API.Controllers {
+namespace API.Controllers
+{
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class CategoryController : ControllerBase, IProductDetails<CategoryDto> {

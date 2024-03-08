@@ -1,8 +1,10 @@
-﻿using BL;
+﻿using API.Utility;
+using BL;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace API.Controllers {
+namespace API.Controllers
+{
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ShoppingCartController : ControllerBase {

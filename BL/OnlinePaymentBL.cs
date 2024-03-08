@@ -1,7 +1,6 @@
 ﻿using Auth;
 using BL.Models;
 using DAL.Constants;
-using DAL.Migrations;
 using DAL.Repository.Models;
 using Stripe;
 

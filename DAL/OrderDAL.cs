@@ -10,7 +10,7 @@ namespace DAL {
             _context = new ApplicationDbContext();
         }
 
-        public async Task<List<Order>> GetAll(string? userId, string? searchString, string? status) {
+        public async Task<(List<Order>, int)> GetAll(string? userId, string? searchString, string? status, int pageNumber, int pageSize) {
             IQueryable<Order> orders = _context.Orders.
                 Include(o => o.OrderDetails).
                     ThenInclude(i => i.Product).
@@ -23,6 +23,8 @@ namespace DAL {
                     ThenInclude(p => p.SpecialTag).
                 Include(m => m.PaymentMethod).
                 OrderByDescending(o => o.OrderId);
+
+            int totalRecords = orders.Count();
 
             if (!string.IsNullOrEmpty(userId)) {
                 orders = orders.Where(u => u.UserId == userId);
@@ -40,7 +42,10 @@ namespace DAL {
                 orders = orders.Where(u => u.Status.ToLower() == status.ToLower());
             }
 
-            return await orders.ToListAsync();
+            orders = orders.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var result = await orders.ToListAsync();
+
+            return (result, totalRecords);
         }
 
         public async Task<Order> Get(int id) {
