@@ -1,4 +1,5 @@
 ﻿using BL.Models;
+using BL.Utility;
 using DAL.Constants;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace BL {
                 return (new ErrorOr<List<Order>>("Page size must be more than 0"), 0);
             }
 
-            var result = await _dal.GetAll(userId, searchString, status, pageNumber, pageSize);
+            var result = await _dal.GetAll(userId, searchString, status?.ToLower().Capitalize(), pageNumber, pageSize);
             return (new ErrorOr<List<Order>>(result.Item1), result.Item2);
         }
 
