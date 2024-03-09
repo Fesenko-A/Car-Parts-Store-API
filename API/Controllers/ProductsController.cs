@@ -28,7 +28,7 @@ namespace API.Controllers {
 
             Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(new Pagination(pageNumber, pageSize, result.Item2)));
 
-            return Ok(new ApiResponse(result.Item1));
+            return Ok(new ApiResponse(result.Item1.Value));
         }
 
         [HttpGet("{id:int}")]
