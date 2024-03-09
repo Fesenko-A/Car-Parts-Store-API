@@ -24,8 +24,6 @@ namespace DAL {
                 Include(m => m.PaymentMethod).
                 OrderByDescending(o => o.OrderId);
 
-            int totalRecords = orders.Count();
-
             if (!string.IsNullOrEmpty(userId)) {
                 orders = orders.Where(u => u.UserId == userId);
             }
@@ -42,6 +40,7 @@ namespace DAL {
                 orders = orders.Where(u => u.Status.ToLower() == status.ToLower());
             }
 
+            int totalRecords = orders.Count();
             orders = orders.Skip((pageNumber - 1) * pageSize).Take(pageSize);
             var result = await orders.ToListAsync();
 
