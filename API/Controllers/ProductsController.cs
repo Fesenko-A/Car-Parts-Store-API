@@ -5,9 +5,9 @@ using BL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Text.Json;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductsController : ControllerBase {
@@ -18,9 +18,17 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResponse>> GetAll() {
-            var products = await _bl.GetAllProducts();
-            return Ok(new ApiResponse(products));
+        public async Task<ActionResult<ApiResponse>> GetAll(string? brand, string? category, string? specialTag, string? searchString, int pageNumber = 1, int pageSize = 5) {
+            // Item1 - list of orders, Item2 - totalRecords (pagination)
+            var result = await _bl.GetAllProducts(brand, category, specialTag, searchString, pageNumber, pageSize);
+
+            if (result.Item1.Value == null) {
+                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result.Item1.Message));
+            }
+
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(new Pagination(pageNumber, pageSize, result.Item2)));
+
+            return Ok(new ApiResponse(result.Item1));
         }
 
         [HttpGet("{id:int}")]

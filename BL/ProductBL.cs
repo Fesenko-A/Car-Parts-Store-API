@@ -10,9 +10,18 @@ namespace BL {
             _dal = new DAL.ProductDAL();
         }
 
-        public async Task<List<Product>> GetAllProducts() {
-            List<Product> productsFromDb = await _dal.GetAllProducts();
-            return productsFromDb;
+        public async Task<(ErrorOr<List<Product>>, int)> GetAllProducts(string? brand, string? category, string? specialTag, string? searchString, int pageNumber, int pageSize) {
+            // Item1 - list of orders, Item2 - totalRecords (pagination)
+            if (pageNumber <= 0) {
+                return (new ErrorOr<List<Product>>("Page number must be more than 0"), 0);
+            }
+
+            if (pageSize <= 0) {
+                return (new ErrorOr<List<Product>>("Page size must be more than 0"), 0);
+            }
+
+            var result = await _dal.GetAllProducts(brand, category, specialTag, searchString, pageNumber, pageSize);
+            return (new ErrorOr<List<Product>>(result.Item1), result.Item2);
         }
 
         public async Task<ErrorOr<Product>> GetProduct(int id) {

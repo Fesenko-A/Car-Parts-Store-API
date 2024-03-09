@@ -10,9 +10,31 @@ namespace DAL {
             _context = new ApplicationDbContext();
         }
 
-        public async Task<List<Product>> GetAllProducts() {
-            var products = await _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category).ToListAsync();
-            return products;
+        public async Task<(List<Product>, int)> GetAllProducts(string? brand, string? category, string? specialTag, string? searchString, int pageNumber, int pageSize) {
+            IQueryable<Product> products = _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category);
+
+            if (!string.IsNullOrEmpty(brand)) {
+                products = products.Where(p => p.Brand.Name == brand);
+            }
+
+            if (!string.IsNullOrEmpty(category)) {
+                products = products.Where(p => p.Category.Name == category);
+            }
+
+            if (!string.IsNullOrEmpty(specialTag)) {
+                products = products.Where(p => p.SpecialTag.Name == specialTag);
+            }
+
+            if (!string.IsNullOrEmpty(searchString)) {
+                products = products.Where(p => p.Name.ToLower().Contains(searchString.ToLower()));
+            }
+
+            int totalRecords = products.Count();
+
+            products = products.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var result = await products.ToListAsync();
+
+            return (result, totalRecords);
         }
 
         public async Task<Product?> GetProduct(int id) {
