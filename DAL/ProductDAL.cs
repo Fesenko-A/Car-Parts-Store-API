@@ -13,15 +13,15 @@ namespace DAL {
         public async Task<(List<Product>, int)> GetAllProducts(string? brand, string? category, string? specialTag, string? searchString, int pageNumber, int pageSize) {
             IQueryable<Product> products = _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category);
 
-            if (!string.IsNullOrEmpty(brand)) {
+            if (!string.IsNullOrEmpty(brand) && brand != "All Brands") {
                 products = products.Where(p => p.Brand.Name == brand);
             }
 
-            if (!string.IsNullOrEmpty(category)) {
+            if (!string.IsNullOrEmpty(category) && category != "All Categories") {
                 products = products.Where(p => p.Category.Name == category);
             }
 
-            if (!string.IsNullOrEmpty(specialTag)) {
+            if (!string.IsNullOrEmpty(specialTag) && specialTag != "All Special Tags") {
                 products = products.Where(p => p.SpecialTag.Name == specialTag);
             }
 
