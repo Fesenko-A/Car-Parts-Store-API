@@ -5,6 +5,7 @@ using BL.Models;
 using Microsoft.AspNetCore.Authorization;
 using API.Utility;
 using System.Text.Json;
+using Common.Filters;
 
 namespace API.Controllers {
     [Route("api/[controller]/[action]")]
@@ -18,15 +19,15 @@ namespace API.Controllers {
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<ApiResponse>> GetAll(string? userId, string? searchString, string? status, int pageNumber = 1, int pageSize = 5) {
+        public async Task<ActionResult<ApiResponse>> GetAll([FromQuery] OrderFilters filters) {
             // Item1 - list of orders, Item2 - totalRecords (pagination)
-            var result = await _bl.GetAll(userId, searchString, status, pageNumber, pageSize);
+            var result = await _bl.GetAll(filters);
 
             if (result.Item1.Value == null) {
                 return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result.Item1.Message));
             }
 
-            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(new Pagination(pageNumber, pageSize, result.Item2)));
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(new Pagination(filters.PageNumber, filters.PageSize, result.Item2)));
 
             return Ok(new ApiResponse(result.Item1.Value));
         }

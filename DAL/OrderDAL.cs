@@ -1,4 +1,5 @@
-﻿using DAL.Repository;
+﻿using Common.Filters;
+using DAL.Repository;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ namespace DAL {
             _context = new ApplicationDbContext();
         }
 
-        public async Task<(List<Order>, int)> GetAll(string? userId, string? searchString, string? status, int pageNumber, int pageSize) {
+        public async Task<(List<Order>, int)> GetAll(OrderFilters filters) {
             IQueryable<Order> orders = _context.Orders.
                 Include(o => o.OrderDetails).
                     ThenInclude(i => i.Product).
@@ -24,24 +25,24 @@ namespace DAL {
                 Include(m => m.PaymentMethod).
                 OrderByDescending(o => o.OrderId);
 
-            if (!string.IsNullOrEmpty(userId)) {
-                orders = orders.Where(u => u.UserId == userId);
+            if (!string.IsNullOrEmpty(filters.UserId)) {
+                orders = orders.Where(u => u.UserId == filters.UserId);
             }
 
-            if (!string.IsNullOrEmpty(searchString)) {
+            if (!string.IsNullOrEmpty(filters.SearchString)) {
                 orders = orders.Where(u =>
-                    u.PickupPhoneNumber.ToLower().Contains(searchString.ToLower()) ||
-                    u.PickupEmail.ToLower().Contains(searchString.ToLower()) ||
-                    u.PickupName.ToLower().Contains(searchString.ToLower())
+                    u.PickupPhoneNumber.ToLower().Contains(filters.SearchString.ToLower()) ||
+                    u.PickupEmail.ToLower().Contains(filters.SearchString.ToLower()) ||
+                    u.PickupName.ToLower().Contains(filters.SearchString.ToLower())
                 );
             }
 
-            if (!string.IsNullOrEmpty(status)) {
-                orders = orders.Where(u => u.Status.ToLower() == status.ToLower());
+            if (!string.IsNullOrEmpty(filters.Status)) {
+                orders = orders.Where(u => u.Status.ToLower() == filters.Status.ToLower());
             }
 
             int totalRecords = orders.Count();
-            orders = orders.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            orders = orders.Skip((filters.PageNumber - 1) * filters.PageSize).Take(filters.PageSize);
             var result = await orders.ToListAsync();
 
             return (result, totalRecords);
