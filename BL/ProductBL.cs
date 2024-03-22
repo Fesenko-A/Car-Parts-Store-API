@@ -1,4 +1,5 @@
 ﻿using BL.Models;
+using Common.Filters;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,17 +11,17 @@ namespace BL {
             _dal = new DAL.ProductDAL();
         }
 
-        public async Task<(ErrorOr<List<Product>>, int)> GetAllProducts(string? brand, string? category, string? specialTag, string? searchString, int pageNumber, int pageSize) {
+        public async Task<(ErrorOr<List<Product>>, int)> GetAllProducts(ProductFilters filters) {
             // Item1 - list of orders, Item2 - totalRecords (pagination)
-            if (pageNumber <= 0) {
+            if (filters.PageNumber <= 0) {
                 return (new ErrorOr<List<Product>>("Page number must be more than 0"), 0);
             }
 
-            if (pageSize <= 0) {
+            if (filters.PageSize <= 0) {
                 return (new ErrorOr<List<Product>>("Page size must be more than 0"), 0);
             }
 
-            var result = await _dal.GetAllProducts(brand, category, specialTag, searchString, pageNumber, pageSize);
+            var result = await _dal.GetAllProducts(filters);
             return (new ErrorOr<List<Product>>(result.Item1), result.Item2);
         }
 

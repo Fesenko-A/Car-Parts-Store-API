@@ -1,4 +1,5 @@
-﻿using DAL.Repository;
+﻿using Common.Filters;
+using DAL.Repository;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,28 +11,28 @@ namespace DAL {
             _context = new ApplicationDbContext();
         }
 
-        public async Task<(List<Product>, int)> GetAllProducts(string? brand, string? category, string? specialTag, string? searchString, int pageNumber, int pageSize) {
+        public async Task<(List<Product>, int)> GetAllProducts(ProductFilters filters) {
             IQueryable<Product> products = _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category);
 
-            if (!string.IsNullOrEmpty(brand) && brand != "All Brands") {
-                products = products.Where(p => p.Brand.Name == brand);
+            if (!string.IsNullOrEmpty(filters.Brand) && filters.Brand != "All Brands") {
+                products = products.Where(p => p.Brand.Name == filters.Brand);
             }
 
-            if (!string.IsNullOrEmpty(category) && category != "All Categories") {
-                products = products.Where(p => p.Category.Name == category);
+            if (!string.IsNullOrEmpty(filters.Category) && filters.Category != "All Categories") {
+                products = products.Where(p => p.Category.Name == filters.Category);
             }
 
-            if (!string.IsNullOrEmpty(specialTag) && specialTag != "All Special Tags") {
-                products = products.Where(p => p.SpecialTag.Name == specialTag);
+            if (!string.IsNullOrEmpty(filters.SpecialTag) && filters.SpecialTag != "All Special Tags") {
+                products = products.Where(p => p.SpecialTag.Name == filters.SpecialTag);
             }
 
-            if (!string.IsNullOrEmpty(searchString)) {
-                products = products.Where(p => p.Name.ToLower().Contains(searchString.ToLower()));
+            if (!string.IsNullOrEmpty(filters.SearchString)) {
+                products = products.Where(p => p.Name.ToLower().Contains(filters.SearchString.ToLower()));
             }
 
             int totalRecords = products.Count();
 
-            products = products.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            products = products.Skip((filters.PageNumber - 1) * filters.PageSize).Take(filters.PageSize);
             var result = await products.ToListAsync();
 
             return (result, totalRecords);

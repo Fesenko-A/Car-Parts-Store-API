@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
+using Common.Filters;
 
 namespace API.Controllers
 {
@@ -19,15 +20,15 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResponse>> GetAll(string? brand, string? category, string? specialTag, string? searchString, int pageNumber = 1, int pageSize = 5) {
+        public async Task<ActionResult<ApiResponse>> GetAll([FromQuery] ProductFilters filters) {
             // Item1 - list of orders, Item2 - totalRecords (pagination)
-            var result = await _bl.GetAllProducts(brand, category, specialTag, searchString, pageNumber, pageSize);
+            var result = await _bl.GetAllProducts(filters);
 
             if (result.Item1.Value == null) {
                 return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, result.Item1.Message));
             }
 
-            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(new Pagination(pageNumber, pageSize, result.Item2)));
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(new Pagination(filters.PageNumber, filters.PageSize, result.Item2)));
 
             return Ok(new ApiResponse(result.Item1.Value));
         }
