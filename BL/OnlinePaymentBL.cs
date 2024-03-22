@@ -1,10 +1,11 @@
-﻿using Auth;
+﻿using Common.Auth;
 using BL.Models;
 using DAL.Constants;
 using DAL.Repository.Models;
 using Stripe;
 
-namespace BL {
+namespace BL
+{
     public class OnlinePaymentBL {
         private readonly DAL.OrderDAL _orderDAL;
         private readonly DAL.OnlinePaymentDAL _onlinePaymentDAL;

@@ -1,7 +1,8 @@
-﻿using Auth;
+﻿using Common.Auth;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DAL.Repository.Models {
+namespace DAL.Repository.Models
+{
     public class OnlinePayment {
         public int Id { get; set; }
         public int OrderId { get; set; }

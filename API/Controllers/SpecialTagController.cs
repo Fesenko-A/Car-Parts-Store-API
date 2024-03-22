@@ -1,11 +1,11 @@
 ﻿using BL;
 using Microsoft.AspNetCore.Mvc;
 using API.Interfaces;
-using Auth;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using BL.Models;
 using API.Utility;
+using Common.Auth;
 
 namespace API.Controllers
 {

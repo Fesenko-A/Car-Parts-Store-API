@@ -1,4 +1,4 @@
-﻿using Auth;
+﻿using Common.Auth;
 using BL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

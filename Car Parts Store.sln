@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BL", "BL\BL.csproj", "{178A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{74D2A191-F3BE-413D-897F-A3C8BE568547}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{DFFDAEEB-B31D-43E7-B3EF-C51485FD3A85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Auth\Common.csproj", "{DFFDAEEB-B31D-43E7-B3EF-C51485FD3A85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

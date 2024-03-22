@@ -1,4 +1,4 @@
-using Auth;
+using Common.Auth;
 using DAL.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

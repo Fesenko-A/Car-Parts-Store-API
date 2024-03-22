@@ -1,9 +1,10 @@
-﻿using Auth;
+﻿using Common.Auth;
 using DAL.Repository.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Repository {
+namespace DAL.Repository
+{
     public class ApplicationDbContext : IdentityDbContext<AppUser> {
 
         public ApplicationDbContext() { }

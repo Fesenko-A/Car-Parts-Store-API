@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Auth {
+namespace Common.Auth {
     public class AppUser : IdentityUser {
         public string Name { get; set; }
     }

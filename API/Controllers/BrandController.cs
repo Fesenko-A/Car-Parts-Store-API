@@ -1,6 +1,6 @@
 ﻿using API.Interfaces;
 using API.Utility;
-using Auth;
+using Common.Auth;
 using BL;
 using BL.Models;
 using Microsoft.AspNetCore.Authorization;

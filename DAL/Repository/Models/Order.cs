@@ -1,8 +1,9 @@
-﻿using Auth;
+﻿using Common.Auth;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DAL.Repository.Models {
+namespace DAL.Repository.Models
+{
     public class Order {
         [Key]
         public int OrderId { get; set; }

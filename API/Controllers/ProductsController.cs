@@ -1,5 +1,5 @@
 ﻿using API.Utility;
-using Auth;
+using Common.Auth;
 using BL;
 using BL.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
 
-namespace API.Controllers {
+namespace API.Controllers
+{
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductsController : ControllerBase {

@@ -1,8 +1,9 @@
-﻿using Auth;
+﻿using Common.Auth;
 using DAL.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL {
+namespace DAL
+{
     public class AuthDAL {
         private readonly ApplicationDbContext _context;
 
