@@ -39,6 +39,10 @@ namespace DAL {
                 }
             }
 
+            if (filters.OutOfStock == false) {
+                products = products.Where(p => p.InStock == true);
+            }
+
             int totalRecords = products.Count();
 
             products = products.Skip((filters.PageNumber - 1) * filters.PageSize).Take(filters.PageSize);
