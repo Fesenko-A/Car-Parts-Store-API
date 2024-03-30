@@ -30,6 +30,15 @@ namespace DAL {
                 products = products.Where(p => p.Name.ToLower().Contains(filters.SearchString.ToLower()));
             }
 
+            if (!string.IsNullOrEmpty(filters.SortingOptions)) {
+                if (filters.SortingOptions == SortingFilters.PRICE_LOW_HIGH) {
+                    products = products.OrderBy(p => p.Price);
+                }
+                if (filters.SortingOptions == SortingFilters.PRICE_HIGH_LOW) {
+                    products = products.OrderByDescending(p => p.Price);
+                }
+            }
+
             int totalRecords = products.Count();
 
             products = products.Skip((filters.PageNumber - 1) * filters.PageSize).Take(filters.PageSize);
