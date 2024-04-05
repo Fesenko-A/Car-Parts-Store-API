@@ -44,7 +44,7 @@ namespace BL {
                 PickupPhoneNumber = orderToCreate.PickupPhoneNumber,
                 OrderTotal = orderToCreate.OrderTotal,
                 OrderDate = DateTime.UtcNow,
-                PaymentMethodId = orderToCreate.PaymentMethodId,
+                PaymentMethodId = 1, // cash by default
                 TotalItems = orderToCreate.TotalItems,
                 Status = string.IsNullOrEmpty(orderToCreate.Status) ? OrderStatus.PENDING : orderToCreate.Status,
                 Paid = false

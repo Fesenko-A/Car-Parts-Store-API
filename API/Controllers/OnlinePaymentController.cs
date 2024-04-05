@@ -30,17 +30,6 @@ namespace API.Controllers
 
             return Ok(new ApiResponse(payment.Value));
         }
-        
-        [HttpPost("{userId}")]
-        public async Task<ActionResult<ApiResponse>> CreateIntent(string userId) {
-            var intent = await _bl.CreateIntent(userId);
-
-            if (intent.Value == null) {
-                return BadRequest(new ApiResponse(HttpStatusCode.BadRequest, false, intent.Message));
-            }
-
-            return Ok(new ApiResponse(intent.Value));
-        }
 
         [HttpPost("{orderId:int}")]
         public async Task<ActionResult<ApiResponse>> CreateIntent(int orderId) {

@@ -7,7 +7,6 @@
         public double OrderTotal { get; set; }
         public string Status { get; set; }
         public int TotalItems { get; set; }
-        public int PaymentMethodId { get; set; }
 
         public IEnumerable<OrderDetailsCreateDto> OrderDetails { get; set; }
     }

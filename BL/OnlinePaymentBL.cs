@@ -9,12 +9,10 @@ namespace BL
     public class OnlinePaymentBL {
         private readonly DAL.OrderDAL _orderDAL;
         private readonly DAL.OnlinePaymentDAL _onlinePaymentDAL;
-        private readonly DAL.ShoppingCartDAL _shoppingCartDAL;
 
         public OnlinePaymentBL() {
             _orderDAL = new DAL.OrderDAL();
             _onlinePaymentDAL = new DAL.OnlinePaymentDAL();
-            _shoppingCartDAL = new DAL.ShoppingCartDAL();
         }
 
         public async Task<List<OnlinePayment>> GetAll(string? userId, string? status) {
@@ -114,35 +112,6 @@ namespace BL
             }
 
             return new ErrorOr<OnlinePayment>(refundedPayment);
-        }
-
-        public async Task<ErrorOr<StripeIntent>> CreateIntent(string userId) {
-            ShoppingCart? shoppingCart = await _shoppingCartDAL.Get(userId);
-
-            if (shoppingCart == null) {
-                return new ErrorOr<StripeIntent>("Shopping Cart not found");
-            }
-
-            if (shoppingCart.CartItems == null || shoppingCart.CartItems.Count() == 0) {
-                return new ErrorOr<StripeIntent>("Shopping Cart is empty");
-            }
-
-            StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
-            shoppingCart.CartTotal = shoppingCart.CartItems.Sum(u => u.Quantity * u.Product.Price);
-
-            PaymentIntentCreateOptions options = new PaymentIntentCreateOptions {
-                Amount = (int)(shoppingCart.CartTotal * 100),
-                Currency = "usd",
-                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions {
-                    Enabled = true,
-                },
-            };
-            PaymentIntentService service = new PaymentIntentService();
-            PaymentIntent response = await service.CreateAsync(options);
-
-            StripeIntent successfulIntent = new StripeIntent { PaymentId = response.Id, ClientSecret = response.ClientSecret };
-            
-            return new ErrorOr<StripeIntent>(successfulIntent);
         }
 
         public async Task<ErrorOr<StripeIntent>> CreateIntent(int orderId) {
