@@ -125,6 +125,10 @@ namespace BL
                 return new ErrorOr<StripeIntent>("Order is empty");
             }
 
+            if (order.OrderTotal == 0) {
+                return new ErrorOr<StripeIntent>("OrderTotal is 0");
+            }
+
             StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
 
             PaymentIntentCreateOptions options = new PaymentIntentCreateOptions {
