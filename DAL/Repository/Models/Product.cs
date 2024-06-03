@@ -25,5 +25,9 @@ namespace DAL.Repository.Models {
         [Range(1, int.MaxValue)]
         public double Price { get; set; }
         public string ImageUrl { get; set; }
+
+        [Range(0, 100)]
+        public int? DiscountPercentage { get; set; }
+        public double? FinalPrice { get; set; }
     }
 }

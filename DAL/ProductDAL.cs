@@ -43,6 +43,10 @@ namespace DAL {
                 products = products.Where(p => p.InStock == true);
             }
 
+            if (filters.OnlyWithDiscount == true) {
+                products = products.Where(p => p.FinalPrice < p.Price);
+            }
+
             int totalRecords = products.Count();
 
             products = products.Skip((filters.PageNumber - 1) * filters.PageSize).Take(filters.PageSize);

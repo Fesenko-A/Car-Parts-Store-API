@@ -1,14 +1,15 @@
 ﻿using BL.Models;
 using Common.Filters;
+using DAL;
 using DAL.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BL {
     public class ProductBL {
-        private readonly DAL.ProductDAL _dal;
+        private readonly ProductDAL _dal;
 
         public ProductBL() {
-            _dal = new DAL.ProductDAL();
+            _dal = new ProductDAL();
         }
 
         public async Task<(ErrorOr<List<Product>>, int)> GetAllProducts(ProductFilters filters) {
@@ -44,7 +45,9 @@ namespace BL {
                 SpecialTagId = productDto.SpecialTagId,
                 CategoryId = productDto.CategoryId,
                 Price = productDto.Price,
-                ImageUrl = productDto.ImageUrl
+                ImageUrl = productDto.ImageUrl,
+                DiscountPercentage = productDto.DiscountPercentage,
+                FinalPrice = Math.Round(((productDto.Price * (100 - productDto.DiscountPercentage)) / 100), 2),
             };
 
             try {
@@ -77,6 +80,8 @@ namespace BL {
             productToUpdate.CategoryId = productUpdateBody.CategoryId;
             productToUpdate.Price = productUpdateBody.Price;
             productToUpdate.ImageUrl = productUpdateBody.ImageUrl;
+            productToUpdate.DiscountPercentage = productUpdateBody.DiscountPercentage;
+            productToUpdate.FinalPrice = Math.Round(((productUpdateBody.Price * (100 - productUpdateBody.DiscountPercentage)) / 100), 2);
 
             try {
                 await _dal.UpdateProduct(productToUpdate);
