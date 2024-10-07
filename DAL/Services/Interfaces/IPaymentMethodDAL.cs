@@ -1,7 +1,7 @@
 ﻿using DAL.Repository.Models;
 
 namespace DAL.Services.Interfaces {
-    internal interface IPaymentMethodDAL {
+    public interface IPaymentMethodDAL {
         Task<List<PaymentMethod>> GetAll();
 
         Task Create(PaymentMethod paymentMethodToCreate);

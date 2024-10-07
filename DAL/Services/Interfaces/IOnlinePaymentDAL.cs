@@ -1,7 +1,7 @@
 ﻿using DAL.Repository.Models;
 
 namespace DAL.Services.Interfaces {
-    internal interface IOnlinePaymentDAL {
+    public interface IOnlinePaymentDAL {
         Task<OnlinePayment?> Get(int id);
 
         Task<List<OnlinePayment>> GetAll(string? userId, string? status);

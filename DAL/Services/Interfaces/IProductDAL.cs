@@ -2,7 +2,7 @@
 using DAL.Repository.Models;
 
 namespace DAL.Services.Interfaces {
-    internal interface IProductDAL {
+    public interface IProductDAL {
         Task<(List<Product>, int)> GetAllProducts(ProductFilters filters);
 
         Task<Product?> GetProduct(int id);

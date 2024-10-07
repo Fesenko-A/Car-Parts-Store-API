@@ -1,7 +1,7 @@
 ﻿using DAL.Repository.Models;
 
 namespace DAL.Services.Interfaces {
-    internal interface IShoppingCartDAL {
+    public interface IShoppingCartDAL {
         Task<ShoppingCart?> Get(string userId);
 
         Task Create(ShoppingCart shoppingCartToAdd);

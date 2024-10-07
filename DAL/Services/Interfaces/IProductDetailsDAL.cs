@@ -1,7 +1,5 @@
-﻿namespace DAL.Services.Interfaces
-{
-    internal interface IProductDetailsDAL<T>
-    {
+﻿namespace DAL.Services.Interfaces {
+    public interface IProductDetailsDAL<T> {
         Task<T?> FindByName(string name);
 
         Task<List<T>> GetAll();

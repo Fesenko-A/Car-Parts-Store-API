@@ -2,7 +2,7 @@
 using DAL.Repository.Models;
 
 namespace DAL.Services.Interfaces {
-    internal interface IOrderDAL {
+    public interface IOrderDAL {
         Task<(List<Order>, int)> GetAll(OrderFilters filters);
 
         Task<Order> Get(int id);
