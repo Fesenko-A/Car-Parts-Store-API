@@ -1,5 +1,8 @@
 using Common.Auth;
 using DAL.Repository;
+using DAL.Repository.Models;
+using DAL.Services.Interfaces;
+using DAL.Services.Concrete.EF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +12,19 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Register DAL services
+builder.Services.AddScoped<IAuthDAL, AuthDAL>();
+builder.Services.AddScoped<ICartItemDAL, CartItemDAL>();
+builder.Services.AddScoped<IOnlinePaymentDAL, OnlinePaymentDAL>();
+builder.Services.AddScoped<IOrderDAL, OrderDAL>();
+builder.Services.AddScoped<IPaymentMethodDAL, PaymendMethodDAL>();
+builder.Services.AddScoped<IProductDAL, ProductDAL>();
+builder.Services.AddScoped<IShoppingCartDAL, ShoppingCartDAL>();
+builder.Services.AddScoped<IProductDetailsDAL<Brand>, BrandDAL>();
+builder.Services.AddScoped<IProductDetailsDAL<Category>, CategoryDAL>();
+builder.Services.AddScoped<IProductDetailsDAL<SpecialTag>, SpecialTagDAL>();
+
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.Configure<IdentityOptions>(options => {
