@@ -1,13 +1,14 @@
 ﻿using BL.Interfaces;
 using BL.Models;
 using DAL.Repository.Models;
+using DAL.Services.Concrete.EF;
 
 namespace BL {
     public class SpecialTagBL : IProductDetailsBL<SpecialTag, SpecialTagDto> {
-        private readonly DAL.SpecialTagDAL _dal;
+        private readonly SpecialTagDAL _dal;
 
         public SpecialTagBL () {
-            _dal = new DAL.SpecialTagDAL();
+            _dal = new SpecialTagDAL();
         }
 
         public async Task<ErrorOr<SpecialTag>> Create(SpecialTagDto dto) {

@@ -1,10 +1,11 @@
 ﻿using Common.Auth;
 using DAL.Repository;
+using DAL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL
+namespace DAL.Services.Concrete.EF
 {
-    public class AuthDAL {
+    public class AuthDAL : IAuthDAL {
         private readonly ApplicationDbContext _context;
 
         public AuthDAL() {

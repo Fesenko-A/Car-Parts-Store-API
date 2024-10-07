@@ -2,14 +2,15 @@
 using Common.Filters;
 using DAL.Constants;
 using DAL.Repository.Models;
+using DAL.Services.Concrete.EF;
 using Microsoft.EntityFrameworkCore;
 
 namespace BL {
     public class OrderBL {
-        private readonly DAL.OrderDAL _dal;
+        private readonly OrderDAL _dal;
 
         public OrderBL() {
-            _dal = new DAL.OrderDAL();
+            _dal = new OrderDAL();
         }
 
         public async Task<(ErrorOr<List<Order>>, int)> GetAll(OrderFilters filters) {

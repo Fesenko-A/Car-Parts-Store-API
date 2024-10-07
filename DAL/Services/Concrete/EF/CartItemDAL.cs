@@ -1,8 +1,9 @@
 ﻿using DAL.Repository;
 using DAL.Repository.Models;
+using DAL.Services.Interfaces;
 
-namespace DAL {
-    public class CartItemDAL {
+namespace DAL.Services.Concrete.EF {
+    public class CartItemDAL : ICartItemDAL {
         private readonly ApplicationDbContext _context;
 
         public CartItemDAL() {

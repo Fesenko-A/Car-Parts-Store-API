@@ -1,12 +1,13 @@
 ﻿using BL.Models;
 using DAL.Repository.Models;
+using DAL.Services.Concrete.EF;
 using Microsoft.EntityFrameworkCore;
 
 namespace BL {
     public class PaymentMethodBL {
-        private readonly DAL.PaymendMethodDAL _dal;
+        private readonly PaymendMethodDAL _dal;
         public PaymentMethodBL() {
-            _dal = new DAL.PaymendMethodDAL();
+            _dal = new PaymendMethodDAL();
         }
 
         public async Task<List<PaymentMethod>> GetAll() {

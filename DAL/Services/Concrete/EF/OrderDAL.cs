@@ -1,10 +1,12 @@
 ﻿using Common.Filters;
 using DAL.Repository;
 using DAL.Repository.Models;
+using DAL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL {
-    public class OrderDAL {
+namespace DAL.Services.Concrete.EF
+{
+    public class OrderDAL : IOrderDAL {
         private readonly ApplicationDbContext _context;
 
         public OrderDAL() {

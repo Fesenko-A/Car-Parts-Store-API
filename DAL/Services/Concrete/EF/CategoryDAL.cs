@@ -1,9 +1,9 @@
 ﻿using DAL.Repository.Models;
 using DAL.Repository;
 using Microsoft.EntityFrameworkCore;
-using DAL.Interfaces;
+using DAL.Services.Interfaces;
 
-namespace DAL {
+namespace DAL.Services.Concrete.EF {
     public class CategoryDAL : IProductDetailsDAL<Category> {
         private readonly ApplicationDbContext _context;
 

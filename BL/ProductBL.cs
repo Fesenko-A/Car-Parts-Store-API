@@ -1,7 +1,7 @@
 ﻿using BL.Models;
 using Common.Filters;
-using DAL;
 using DAL.Repository.Models;
+using DAL.Services.Concrete.EF;
 using Microsoft.EntityFrameworkCore;
 
 namespace BL {

@@ -5,16 +5,17 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using DAL.Services.Concrete.EF;
 
 namespace BL
 {
     public class AuthBL {
-        private readonly DAL.AuthDAL _dal;
+        private readonly AuthDAL _dal;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public AuthBL(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager) {
-            _dal = new DAL.AuthDAL();
+            _dal = new AuthDAL();
             _userManager = userManager; 
             _roleManager = roleManager;
         }

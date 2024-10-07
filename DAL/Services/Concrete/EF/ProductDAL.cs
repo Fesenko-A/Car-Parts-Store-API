@@ -1,10 +1,12 @@
 ﻿using Common.Filters;
 using DAL.Repository;
 using DAL.Repository.Models;
+using DAL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL {
-    public class ProductDAL {
+namespace DAL.Services.Concrete.EF
+{
+    public class ProductDAL : IProductDAL {
         private readonly ApplicationDbContext _context;
 
         public ProductDAL() {
@@ -14,36 +16,45 @@ namespace DAL {
         public async Task<(List<Product>, int)> GetAllProducts(ProductFilters filters) {
             IQueryable<Product> products = _context.Products.Include(p => p.Brand).Include(p => p.SpecialTag).Include(p => p.Category);
 
-            if (!string.IsNullOrEmpty(filters.Brand) && filters.Brand != "All Brands") {
+            if (!string.IsNullOrEmpty(filters.Brand) && filters.Brand != "All Brands")
+            {
                 products = products.Where(p => p.Brand.Name == filters.Brand);
             }
 
-            if (!string.IsNullOrEmpty(filters.Category) && filters.Category != "All Categories") {
+            if (!string.IsNullOrEmpty(filters.Category) && filters.Category != "All Categories")
+            {
                 products = products.Where(p => p.Category.Name == filters.Category);
             }
 
-            if (!string.IsNullOrEmpty(filters.SpecialTag) && filters.SpecialTag != "All Special Tags") {
+            if (!string.IsNullOrEmpty(filters.SpecialTag) && filters.SpecialTag != "All Special Tags")
+            {
                 products = products.Where(p => p.SpecialTag.Name == filters.SpecialTag);
             }
 
-            if (!string.IsNullOrEmpty(filters.SearchString)) {
+            if (!string.IsNullOrEmpty(filters.SearchString))
+            {
                 products = products.Where(p => p.Name.ToLower().Contains(filters.SearchString.ToLower()));
             }
 
-            if (!string.IsNullOrEmpty(filters.SortingOptions)) {
-                if (filters.SortingOptions == SortingFilters.PRICE_LOW_HIGH) {
+            if (!string.IsNullOrEmpty(filters.SortingOptions))
+            {
+                if (filters.SortingOptions == SortingFilters.PRICE_LOW_HIGH)
+                {
                     products = products.OrderBy(p => p.Price);
                 }
-                if (filters.SortingOptions == SortingFilters.PRICE_HIGH_LOW) {
+                if (filters.SortingOptions == SortingFilters.PRICE_HIGH_LOW)
+                {
                     products = products.OrderByDescending(p => p.Price);
                 }
             }
 
-            if (filters.OutOfStock == false) {
+            if (filters.OutOfStock == false)
+            {
                 products = products.Where(p => p.InStock == true);
             }
 
-            if (filters.OnlyWithDiscount == true) {
+            if (filters.OnlyWithDiscount == true)
+            {
                 products = products.Where(p => p.FinalPrice < p.Price);
             }
 

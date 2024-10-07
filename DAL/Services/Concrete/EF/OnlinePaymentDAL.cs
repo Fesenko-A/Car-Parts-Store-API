@@ -1,9 +1,11 @@
 ﻿using DAL.Repository;
 using DAL.Repository.Models;
+using DAL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL {
-    public class OnlinePaymentDAL {
+namespace DAL.Services.Concrete.EF
+{
+    public class OnlinePaymentDAL : IOnlinePaymentDAL {
         private readonly ApplicationDbContext _context;
 
         public OnlinePaymentDAL() {

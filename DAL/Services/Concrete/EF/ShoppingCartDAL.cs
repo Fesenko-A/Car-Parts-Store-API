@@ -1,9 +1,11 @@
 ﻿using DAL.Repository;
 using DAL.Repository.Models;
+using DAL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL {
-    public class ShoppingCartDAL {
+namespace DAL.Services.Concrete.EF
+{
+    public class ShoppingCartDAL : IShoppingCartDAL {
         private readonly ApplicationDbContext _context;
 
         public ShoppingCartDAL() {
@@ -24,7 +26,7 @@ namespace DAL {
                 FirstOrDefaultAsync(u => u.UserId == userId);
 
             return shoppingCart;
-        } 
+        }
 
         public async Task Create(ShoppingCart shoppingCartToAdd) {
             _context.ShoppingCarts.Add(shoppingCartToAdd);

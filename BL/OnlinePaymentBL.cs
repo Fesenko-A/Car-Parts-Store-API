@@ -3,16 +3,16 @@ using BL.Models;
 using DAL.Constants;
 using DAL.Repository.Models;
 using Stripe;
+using DAL.Services.Concrete.EF;
 
-namespace BL
-{
+namespace BL {
     public class OnlinePaymentBL {
-        private readonly DAL.OrderDAL _orderDAL;
-        private readonly DAL.OnlinePaymentDAL _onlinePaymentDAL;
+        private readonly OrderDAL _orderDAL;
+        private readonly OnlinePaymentDAL _onlinePaymentDAL;
 
         public OnlinePaymentBL() {
-            _orderDAL = new DAL.OrderDAL();
-            _onlinePaymentDAL = new DAL.OnlinePaymentDAL();
+            _orderDAL = new OrderDAL();
+            _onlinePaymentDAL = new OnlinePaymentDAL();
         }
 
         public async Task<List<OnlinePayment>> GetAll(string? userId, string? status) {

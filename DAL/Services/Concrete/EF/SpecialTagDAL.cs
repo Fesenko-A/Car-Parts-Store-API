@@ -1,9 +1,10 @@
 ﻿using DAL.Repository.Models;
 using DAL.Repository;
 using Microsoft.EntityFrameworkCore;
-using DAL.Interfaces;
+using DAL.Services.Interfaces;
 
-namespace DAL {
+namespace DAL.Services.Concrete.EF
+{
     public class SpecialTagDAL : IProductDetailsDAL<SpecialTag> {
         private readonly ApplicationDbContext _context;
 

@@ -1,14 +1,16 @@
 ﻿using DAL.Repository.Models;
+using DAL.Services.Concrete.EF;
 
 namespace BL {
     public class ShoppingCartBL {
-        private readonly DAL.ShoppingCartDAL _shoppingCartDal;
-        private readonly DAL.ProductDAL _productDal;
-        private readonly DAL.CartItemDAL _cartItemDal;
+        private readonly ShoppingCartDAL _shoppingCartDal;
+        private readonly ProductDAL _productDal;
+        private readonly CartItemDAL _cartItemDal;
+
         public ShoppingCartBL() {
-            _shoppingCartDal = new DAL.ShoppingCartDAL();
-            _productDal = new DAL.ProductDAL();
-            _cartItemDal = new DAL.CartItemDAL();
+            _shoppingCartDal = new ShoppingCartDAL();
+            _productDal = new ProductDAL();
+            _cartItemDal = new CartItemDAL();
         }
 
         public async Task<ErrorOr<ShoppingCart>> Get(string userId) {
