@@ -1,22 +1,21 @@
 ﻿using API.Utility;
 using Common.Auth;
-using BL;
 using BL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
 using Common.Filters;
+using BL.Services.Interfaces;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductsController : ControllerBase {
-        private readonly ProductBL _bl;
+        private readonly IProductBL _bl;
 
-        public ProductsController() {
-            _bl = new ProductBL();
+        public ProductsController(IProductBL bl) {
+            _bl = bl;
         }
 
         [HttpGet]

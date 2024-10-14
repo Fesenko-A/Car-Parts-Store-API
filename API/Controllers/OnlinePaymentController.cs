@@ -1,17 +1,16 @@
 ﻿using API.Utility;
-using BL;
+using BL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class OnlinePaymentController : ControllerBase {
-        private readonly OnlinePaymentBL _bl;
+        private readonly IOnlinePaymentBL _bl;
 
-        public OnlinePaymentController() {
-            _bl = new OnlinePaymentBL();
+        public OnlinePaymentController(IOnlinePaymentBL bl) {
+            _bl = bl;
         }
 
         [HttpGet]

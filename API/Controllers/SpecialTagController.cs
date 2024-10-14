@@ -1,21 +1,20 @@
-﻿using BL;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using BL.Models;
 using API.Utility;
 using Common.Auth;
+using BL.Services.Interfaces;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class SpecialTagController : ControllerBase, IProductDetails<SpecialTagDto> {
-        private readonly SpecialTagBL _bl;
+        private readonly ISpecialTagBL _bl;
 
-        public SpecialTagController() {
-            _bl = new SpecialTagBL();
+        public SpecialTagController(ISpecialTagBL bl) {
+            _bl = bl;
         }
 
         [HttpGet]

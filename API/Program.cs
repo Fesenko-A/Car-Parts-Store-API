@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using BL.Services.Interfaces;
+using BL.Services.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,18 @@ builder.Services.AddScoped<IShoppingCartDAL, ShoppingCartDAL>();
 builder.Services.AddScoped<IProductDetailsDAL<Brand>, BrandDAL>();
 builder.Services.AddScoped<IProductDetailsDAL<Category>, CategoryDAL>();
 builder.Services.AddScoped<IProductDetailsDAL<SpecialTag>, SpecialTagDAL>();
+
+// Register BL services
+builder.Services.AddScoped<IAuthBL, AuthBL>();
+builder.Services.AddScoped<IBrandBL, BrandBL>();
+builder.Services.AddScoped<ICategoryBL, CategoryBL>();
+builder.Services.AddScoped<IOnlinePaymentBL, OnlinePaymentStripeBL>();
+builder.Services.AddScoped<IOrderBL, OrderBL>();
+builder.Services.AddScoped<IPaymentMethodBL, PaymentMethodBL>();
+builder.Services.AddScoped<IProductBL, ProductBL>();
+builder.Services.AddScoped<IShoppingCartBL, ShoppingCartBL>();
+builder.Services.AddScoped<ISpecialTagBL, SpecialTagBL>();
+
 
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();

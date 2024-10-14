@@ -1,17 +1,16 @@
 ﻿using API.Utility;
-using BL;
+using BL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ShoppingCartController : ControllerBase {
-        private readonly ShoppingCartBL _bl;
+        private readonly IShoppingCartBL _bl;
 
-        public ShoppingCartController() {
-            _bl = new ShoppingCartBL();
+        public ShoppingCartController(IShoppingCartBL bl) {
+            _bl = bl;
         }
 
         [HttpGet]

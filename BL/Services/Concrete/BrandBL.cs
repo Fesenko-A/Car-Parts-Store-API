@@ -1,14 +1,14 @@
-﻿using BL.Interfaces;
-using BL.Models;
+﻿using BL.Models;
+using BL.Services.Interfaces;
 using DAL.Repository.Models;
-using DAL.Services.Concrete.EF;
+using DAL.Services.Interfaces;
 
-namespace BL {
-    public class BrandBL : IProductDetailsBL<Brand, BrandDto> {
-        private readonly BrandDAL _dal;
+namespace BL.Services.Concrete {
+    public class BrandBL : IBrandBL {
+        private readonly IProductDetailsDAL<Brand> _dal;
 
-        public BrandBL() { 
-            _dal = new BrandDAL();
+        public BrandBL(IProductDetailsDAL<Brand> dal) {
+            _dal = dal;
         }
 
         public async Task<ErrorOr<Brand>> Create(BrandDto dto) {

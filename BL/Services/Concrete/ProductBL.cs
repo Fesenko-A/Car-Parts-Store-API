@@ -1,15 +1,16 @@
 ﻿using BL.Models;
+using BL.Services.Interfaces;
 using Common.Filters;
 using DAL.Repository.Models;
-using DAL.Services.Concrete.EF;
+using DAL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BL {
-    public class ProductBL {
-        private readonly ProductDAL _dal;
+namespace BL.Services.Concrete {
+    public class ProductBL : IProductBL {
+        private readonly IProductDAL _dal;
 
-        public ProductBL() {
-            _dal = new ProductDAL();
+        public ProductBL(IProductDAL dal) {
+            _dal = dal;
         }
 
         public async Task<(ErrorOr<List<Product>>, int)> GetAllProducts(ProductFilters filters) {
@@ -28,7 +29,7 @@ namespace BL {
 
         public async Task<ErrorOr<Product>> GetProduct(int id) {
             Product? productFromDb = await _dal.GetProduct(id);
-            
+
             if (productFromDb == null) {
                 return new ErrorOr<Product>("Product not found");
             }
@@ -47,12 +48,13 @@ namespace BL {
                 Price = productDto.Price,
                 ImageUrl = productDto.ImageUrl,
                 DiscountPercentage = productDto.DiscountPercentage,
-                FinalPrice = Math.Round(((productDto.Price * (100 - productDto.DiscountPercentage)) / 100), 2),
+                FinalPrice = Math.Round(productDto.Price * (100 - productDto.DiscountPercentage) / 100, 2),
             };
 
             try {
                 await _dal.CreateProduct(product);
-            } catch (DbUpdateException) {
+            }
+            catch (DbUpdateException) {
                 return new ErrorOr<Product>("Error while creating Product");
             }
 
@@ -81,11 +83,12 @@ namespace BL {
             productToUpdate.Price = productUpdateBody.Price;
             productToUpdate.ImageUrl = productUpdateBody.ImageUrl;
             productToUpdate.DiscountPercentage = productUpdateBody.DiscountPercentage;
-            productToUpdate.FinalPrice = Math.Round(((productUpdateBody.Price * (100 - productUpdateBody.DiscountPercentage)) / 100), 2);
+            productToUpdate.FinalPrice = Math.Round(productUpdateBody.Price * (100 - productUpdateBody.DiscountPercentage) / 100, 2);
 
             try {
                 await _dal.UpdateProduct(productToUpdate);
-            } catch (DbUpdateException) {
+            }
+            catch (DbUpdateException) {
                 return new ErrorOr<Product>("Error while updating Product");
             }
 

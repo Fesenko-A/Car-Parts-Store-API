@@ -1,20 +1,19 @@
 ﻿using API.Utility;
 using Common.Auth;
-using BL;
 using BL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using BL.Services.Interfaces;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class PaymentMethodController : ControllerBase {
-        private readonly PaymentMethodBL _bl;
+        private readonly IPaymentMethodBL _bl;
 
-        public PaymentMethodController() {
-            _bl = new PaymentMethodBL();
+        public PaymentMethodController(IPaymentMethodBL bl) {
+            _bl = bl;
         }
 
         [HttpGet]

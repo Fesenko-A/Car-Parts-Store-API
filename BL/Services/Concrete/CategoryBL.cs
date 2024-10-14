@@ -1,14 +1,14 @@
-﻿using BL.Interfaces;
-using BL.Models;
+﻿using BL.Models;
+using BL.Services.Interfaces;
 using DAL.Repository.Models;
-using DAL.Services.Concrete.EF;
+using DAL.Services.Interfaces;
 
-namespace BL {
-    public class CategoryBL : IProductDetailsBL<Category, CategoryDto> {
-        private readonly CategoryDAL _dal;
+namespace BL.Services.Concrete {
+    public class CategoryBL : ICategoryBL {
+        private readonly IProductDetailsDAL<Category> _dal;
 
-        public CategoryBL() {
-            _dal = new CategoryDAL();
+        public CategoryBL(IProductDetailsDAL<Category> dal) {
+            _dal = dal;
         }
 
         public async Task<ErrorOr<Category>> Create(CategoryDto dto) {

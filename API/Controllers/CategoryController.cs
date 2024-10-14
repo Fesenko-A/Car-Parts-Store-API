@@ -1,21 +1,20 @@
 ﻿using BL.Models;
-using BL;
 using Microsoft.AspNetCore.Mvc;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using API.Utility;
 using Common.Auth;
+using BL.Services.Interfaces;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class CategoryController : ControllerBase, IProductDetails<CategoryDto> {
-        private readonly CategoryBL _bl;
+        private readonly ICategoryBL _bl;
 
-        public CategoryController() {
-            _bl = new CategoryBL();
+        public CategoryController(ICategoryBL bl) {
+            _bl = bl;
         }
 
         [HttpGet]

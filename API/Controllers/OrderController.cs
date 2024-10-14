@@ -1,20 +1,20 @@
-﻿using BL;
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using BL.Models;
 using Microsoft.AspNetCore.Authorization;
 using API.Utility;
 using System.Text.Json;
 using Common.Filters;
+using BL.Services.Interfaces;
 
 namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class OrderController : ControllerBase {
-        private readonly OrderBL _bl;
+        private readonly IOrderBL _bl;
         
-        public OrderController() {
-            _bl = new OrderBL();
+        public OrderController(IOrderBL bl) {
+            _bl = bl;
         }
 
         [Authorize]

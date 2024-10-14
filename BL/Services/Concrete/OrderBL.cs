@@ -1,16 +1,17 @@
 ﻿using BL.Models;
+using BL.Services.Interfaces;
 using Common.Filters;
 using DAL.Constants;
 using DAL.Repository.Models;
-using DAL.Services.Concrete.EF;
+using DAL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BL {
-    public class OrderBL {
-        private readonly OrderDAL _dal;
+namespace BL.Services.Concrete {
+    public class OrderBL : IOrderBL {
+        private readonly IOrderDAL _dal;
 
-        public OrderBL() {
-            _dal = new OrderDAL();
+        public OrderBL(IOrderDAL dal) {
+            _dal = dal;
         }
 
         public async Task<(ErrorOr<List<Order>>, int)> GetAll(OrderFilters filters) {

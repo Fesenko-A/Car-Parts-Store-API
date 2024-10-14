@@ -1,16 +1,17 @@
-﻿using DAL.Repository.Models;
-using DAL.Services.Concrete.EF;
+﻿using BL.Services.Interfaces;
+using DAL.Repository.Models;
+using DAL.Services.Interfaces;
 
-namespace BL {
-    public class ShoppingCartBL {
-        private readonly ShoppingCartDAL _shoppingCartDal;
-        private readonly ProductDAL _productDal;
-        private readonly CartItemDAL _cartItemDal;
+namespace BL.Services.Concrete {
+    public class ShoppingCartBL : IShoppingCartBL {
+        private readonly IShoppingCartDAL _shoppingCartDal;
+        private readonly IProductDAL _productDal;
+        private readonly ICartItemDAL _cartItemDal;
 
-        public ShoppingCartBL() {
-            _shoppingCartDal = new ShoppingCartDAL();
-            _productDal = new ProductDAL();
-            _cartItemDal = new CartItemDAL();
+        public ShoppingCartBL(IShoppingCartDAL shoppingCartDal, IProductDAL productDal, ICartItemDAL cartItemDal) {
+            _shoppingCartDal = shoppingCartDal;
+            _productDal = productDal;
+            _cartItemDal = cartItemDal;
         }
 
         public async Task<ErrorOr<ShoppingCart>> Get(string userId) {

@@ -1,18 +1,19 @@
-﻿using Common.Auth;
+﻿using Stripe;
+using Common.Auth;
 using BL.Models;
 using DAL.Constants;
 using DAL.Repository.Models;
-using Stripe;
-using DAL.Services.Concrete.EF;
+using BL.Services.Interfaces;
+using DAL.Services.Interfaces;
 
-namespace BL {
-    public class OnlinePaymentBL {
-        private readonly OrderDAL _orderDAL;
-        private readonly OnlinePaymentDAL _onlinePaymentDAL;
+namespace BL.Services.Concrete {
+    public class OnlinePaymentStripeBL : IOnlinePaymentBL {
+        private readonly IOrderDAL _orderDAL;
+        private readonly IOnlinePaymentDAL _onlinePaymentDAL;
 
-        public OnlinePaymentBL() {
-            _orderDAL = new OrderDAL();
-            _onlinePaymentDAL = new OnlinePaymentDAL();
+        public OnlinePaymentStripeBL(IOrderDAL orderDAL, IOnlinePaymentDAL onlinePaymentDAL) {
+            _orderDAL = orderDAL;
+            _onlinePaymentDAL = onlinePaymentDAL;
         }
 
         public async Task<List<OnlinePayment>> GetAll(string? userId, string? status) {
@@ -22,7 +23,7 @@ namespace BL {
 
         public async Task<ErrorOr<OnlinePayment?>> GetByOrderId(int orderId) {
             var payment = await _onlinePaymentDAL.GetByOrderId(orderId);
-            
+
             if (payment == null) {
                 return new ErrorOr<OnlinePayment?>("Online payment not found");
             }
@@ -90,12 +91,13 @@ namespace BL {
             }
 
             StripeConfiguration.ApiKey = AuthOptions.STRIPEKEY;
-            RefundCreateOptions options = new RefundCreateOptions { PaymentIntent = onlinePayment.PaymentId};
+            RefundCreateOptions options = new RefundCreateOptions { PaymentIntent = onlinePayment.PaymentId };
             RefundService service = new RefundService();
 
             try {
                 var response = service.Create(options);
-            } catch {
+            }
+            catch {
                 return new ErrorOr<OnlinePayment>("Error while creating refund");
             }
 
@@ -138,6 +140,7 @@ namespace BL {
                     Enabled = true,
                 },
             };
+
             PaymentIntentService service = new PaymentIntentService();
             PaymentIntent response = await service.CreateAsync(options);
 
@@ -146,14 +149,14 @@ namespace BL {
             return new ErrorOr<StripeIntent>(successfulIntent);
         }
 
-        private async Task<bool> Update(int id, OnlinePayment paymentToUpdate) {
-            if (id != paymentToUpdate.Id) { 
-                return false; 
+        public async Task<bool> Update(int id, OnlinePayment paymentToUpdate) {
+            if (id != paymentToUpdate.Id) {
+                return false;
             }
 
             OnlinePayment? paymentFromDb = await _onlinePaymentDAL.Get(id);
 
-            if (paymentFromDb == null) { 
+            if (paymentFromDb == null) {
                 return false;
             }
 

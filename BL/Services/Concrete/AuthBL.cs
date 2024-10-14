@@ -5,18 +5,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using DAL.Services.Concrete.EF;
+using DAL.Services.Interfaces;
+using BL.Services.Interfaces;
 
-namespace BL
-{
-    public class AuthBL {
-        private readonly AuthDAL _dal;
+namespace BL.Services.Concrete {
+    public class AuthBL : IAuthBL {
+        private readonly IAuthDAL _dal;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthBL(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager) {
-            _dal = new AuthDAL();
-            _userManager = userManager; 
+        public AuthBL(IAuthDAL dal, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager) {
+            _dal = dal;
+            _userManager = userManager;
             _roleManager = roleManager;
         }
 
@@ -51,8 +51,8 @@ namespace BL
 
             return new ErrorOr<bool>(true);
         }
-    
-        public async Task<ErrorOr<LoginResponseDto>> Login(LoginRequestDto loginRequest) {
+
+        public async Task<ErrorOr<LoginResponseDto>> Login(LoginRequestDto loginRequest) { 
             AppUser? userFromDb = await _dal.GetUser(loginRequest.UserName);
             if (userFromDb == null) {
                 return new ErrorOr<LoginResponseDto>("User not found");

@@ -1,20 +1,19 @@
 ﻿using API.Utility;
 using Common.Auth;
-using BL;
 using BL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using BL.Services.Interfaces;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase {
-        private readonly AuthBL _bl;
+        private readonly IAuthBL _bl;
 
-        public AuthController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager) {
-            _bl = new AuthBL(userManager, roleManager);
+        public AuthController(IAuthBL bl, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager) {
+            _bl = bl;
         }
 
         [HttpPost]

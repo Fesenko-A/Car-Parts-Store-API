@@ -1,21 +1,20 @@
 ﻿using API.Interfaces;
 using API.Utility;
 using Common.Auth;
-using BL;
 using BL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using BL.Services.Interfaces;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class BrandController : ControllerBase, IProductDetails<BrandDto> {
-        private readonly BrandBL _bl;
+        private readonly IBrandBL _bl;
 
-        public BrandController() {
-            _bl = new BrandBL();
+        public BrandController(IBrandBL bl) {
+            _bl = bl;
         }
 
         [HttpGet]
